@@ -39,7 +39,7 @@
       </dl>
 
       <dl>
-        <dt>Instruction</dt>
+        <dt>Instructions</dt>
         <dd><input type="text" name="vidLink" value"" ></dd>
       </dl>
 
