@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <title>RoadieFit - Exercises</title>
+    <title>RoadieFit - Exercise</title>
     <meta charset="utf-8">
     <link rel="stylesheet" media="all" href="../stylesheets/staff.css">
   </head>
