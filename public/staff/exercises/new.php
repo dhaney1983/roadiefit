@@ -39,8 +39,8 @@
       </dl>
 
       <dl>
-        <dt>Instruction</dt>
-        <dd><input type="text" name="vidLink" value"" ></dd>
+        <dt>Instructions</dt>
+        <dd><textarea name="instructions" id="comments" cols="30" rows="20"></textarea></dd>
       </dl>
 
   </div>
