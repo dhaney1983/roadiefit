@@ -1,5 +1,5 @@
 <?php require_once('../../../private/initialize.php') ?>
-  <?php $subjects = [
+  <?php $exercises = [
     ['id' => '1', 'exercise_name' => 'Sumo Deadlift', 'category' => 'Kettle Bell', 'instruction' => 'This that and the other', 'vidLink' => 'https://www.youtube.com/embed/cKx8xE8jJZs?start=60'],
     ['id' => '2', 'exercise_name' => 'Sumo Deadlift Lockout', 'category' => 'Kettle Bell', 'instruction' => 'This that and the other', 'vidLink' => 'https://www.youtube.com/embed/cKx8xE8jJZs?start=60'],
     ['id' => '3', 'exercise_name' => 'Face-the-Wall Squat', 'category' => 'Kettle Bell', 'instruction' => 'This that and the other', 'vidLink' => 'https://www.youtube.com/embed/cKx8xE8jJZs?start=60'],
@@ -13,7 +13,7 @@
   <div class="exercise listing">
     <h1>Exercises</h1>
     <div class="actions">
-      <a class="action" href="new.php"> Create New Exercise</a>
+      <a class="action" href="<?= url_for('/staff/exercises/new.php');?>"> Create New Exercise</a>
     </div>
 
     <table class="list">
@@ -27,15 +27,15 @@
         <th>&nbsp;</th>
         <th>&nbsp;</th>
       </tr>
-      <?php foreach ($subjects as $subject): ?>
+      <?php foreach ($exercises as $exercise): ?>
         <tr>
-          <td><?php echo $subject['id']?></td>
-          <td><?php echo $subject['exercise_name']?></td>
-          <td><?php echo $subject['category']?></td>
-          <td><?php echo $subject['instruction']?></td>
-          <td><a href="<?php echo $subject['vidLink']?>">Video Link</a></td>
-          <td><a class="action" href="<?= url_for('/staff/exercises/view.php?id=' . $subject['id']);?>"</a>View</td>
-          <td>Edit</td>
+          <td><?= $exercise['id']?></td>
+          <td><?= $exercise['exercise_name']?></td>
+          <td><?= $exercise['category']?></td>
+          <td><?= $exercise['instruction']?></td>
+          <td><a href="<?= $subject['vidLink']?>">Video Link</a></td>
+          <td><a class="action" href="<?= url_for('/staff/exercises/view.php?id=' . h(u($exercise['id'])));?>">View</a></td>
+          <td><a class="action" href="<?= url_for('/staff/exercises/edit.php?id=' . h(u($exercise['id'])));?>">Edit</a></td>
           <td>Delete</td>
         </tr>
       <?php endforeach; ?>
