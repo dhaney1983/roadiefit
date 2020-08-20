@@ -3,15 +3,15 @@
 $id = $_GET['id'] ?? '1';
  ?>
 
- <?php $page_title = 'View Exercise' ?>
+ <?php $page_title = 'View Workout' ?>
  <?php include(SHARED_PATH . '/staff_header.php');?>
 
  <div id="content">
-   <a class="back-link" href="<?= url_for('/staff/exercises/index.php');?>">&laquo;Back to List</a>
+   <a class="back-link" href="<?= url_for('/staff/workouts/index.php');?>">&laquo;Back to List</a>
 
-   <div class="view exercise">
+   <div class="view workout">
 
-   Exericse ID: <?= h($id); ?>
+   Workout ID: <?= h($id); ?>
 
   </div>
  </div>
