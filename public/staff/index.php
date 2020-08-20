@@ -1,11 +1,19 @@
-<!DOCTYPE html>
+<?php require_once('../../private/initialize.php') ?>
 
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Roadie Fit</title>
-  </head>
-  <body>
-    <h1>RoadieFit - coming soon</h1>
-  </body>
-</html>
+<?php $page_title = 'Staff Menu'; ?>
+<?php include(SHARED_PATH . '/staff_header.php'); ?>
+
+
+    <div id="content">
+
+      <div id="main-menu">
+        <h2>Main Menu</h2>
+        <ul>
+          <li><a href="<?php echo url_for('staff/workouts/index.php'); ?>">Workouts</a></li>
+          <li><a href="<?php echo url_for('staff/exercises/index.php'); ?>">Exercises</a></li>
+        </ul>
+      </div>
+
+    </div>
+
+<?php include(SHARED_PATH . '/staff_footer.php'); ?>
