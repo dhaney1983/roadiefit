@@ -1,11 +1,9 @@
 <?php require_once('../../../private/initialize.php') ?>
-  <?php $metcons = [
-    ['id' => '1', 'metcon' => 'AMRAP', 'description' => 'As Many Rounds As Possible'],
-    ['id' => '1', 'metcon' => 'For Time', 'description' => 'For Time']
-  ];
+<?php
+  $metcon_set = find_all_metcons();
 ?>
 
-<?php $page_title = 'Exercises'; ?>
+<?php $page_title = 'Metcon'; ?>
 <?php include(SHARED_PATH . '/staff_header.php'); ?>
 
 <div id="content">
@@ -24,7 +22,7 @@
         <th>&nbsp;</th>
         <th>&nbsp;</th>
       </tr>
-      <?php foreach ($metcons as $metcon): ?>
+      <?php while ($metcon = mysqli_fetch_assoc($metcon_set)) : ?>
         <tr>
           <td><?= $metcon['id']?></td>
           <td><?= $metcon['metcon']?></td>
@@ -33,7 +31,7 @@
           <td><a class="action" href="<?= url_for('/staff/metcon/edit.php?id=' . h(u($metcon['id'])));?>">Edit</a></td>
           <td>Delete</td>
         </tr>
-      <?php endforeach; ?>
+      <?php endwhile; ?>
     </table>
   </div>
 </div>
