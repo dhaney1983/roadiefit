@@ -32,7 +32,7 @@
           <td><?= h($page['position']); ?></td>
           <td><?= $page['visible'] == 1 ? 'true' : 'false'; ?></td>
     	    <td><?= h($page['menu_name']); ?></td>
-          <td><a class="action" href="<?= url_for('/staff/pages/show.php?id=' . h(u($page['id']))); ?>">View</a></td>
+          <td><a class="action" href="<?= url_for('/staff/pages/view.php?id=' . h(u($page['id']))); ?>">View</a></td>
           <td><a class="action" href="<?= url_for('/staff/pages/edit.php?id=' . h(u($page['id']))); ?>">Edit</a></td>
           <td><a class="action" href="">Delete</a></td>
     	  </tr>

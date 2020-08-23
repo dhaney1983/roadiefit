@@ -14,10 +14,11 @@ $instructions = '';
 $stimulus = '';
 $scales = '';
 
+$workoutSteps_set = find_all_workoutSteps($id);
+
 if(is_post_request()) {
 
   // Handle form values sent by new.php
-
   $workout_name = $_POST['workout_name'] ?? '';
   $author = $_POST['author'] ?? '';
   $metcon = $_POST['fkMetcon'] ?? '';
@@ -42,9 +43,7 @@ if(is_post_request()) {
 <?php include(SHARED_PATH . '/staff_header.php'); ?>
 
 <div id="content">
-
   <a class="back-link" href="<?= url_for('/staff/workouts/index.php'); ?>">&laquo; Back to List</a>
-
   <div class="workout edit">
     <h1>Edit Workout</h1>
   <table>
@@ -83,23 +82,30 @@ if(is_post_request()) {
             <input type="submit" value="Submit Changes to Workout" />
           </div>
         </form>
-    </td>
-  <td alight="left" valign="top" width="460">
-    <table border="0" align="left" valign="top" class="list">
-      <tr>
-        <th colspan="2">Exercises</th>
-      </tr>
-      <tr>
-        <th width="75">Order</th>
-        <th>Exercise</th>
-      </tr>
-    </table>
-  </td>
-</tr>
-</table>
-
+      </td>
+      <td alight="left" valign="top" width="460">
+        <table border="0" align="left" valign="top" class="list">
+          <tr>
+            <th colspan="3">Exercises</th>
+          </tr>
+          <tr>
+            <th width="75">Order</th>
+            <th width="75">Reps</th>
+            <th>Exercise</th>
+          </tr>
+          <?php while ($workoutSteps = mysqli_fetch_assoc($workoutSteps_set)) :
+            $exerciseName = find_exercise_by_id($workoutSteps['_fkExercise']);?>
+            <tr>
+              <td><?= $workoutSteps['stepOrder']; ?></td>
+              <td><?= $workoutSteps['reps']; ?></td>
+              <td><?= $exerciseName['exercise_name']; ?></td>
+            </tr>
+          <?php endwhile; ?>
+        </table>
+      </td>
+    </tr>
+  </table>
   </div>
-
 </div>
 
 <?php include(SHARED_PATH . '/staff_footer.php'); ?>

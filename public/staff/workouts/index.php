@@ -27,14 +27,14 @@
       </tr>
       <?php while ($workout = mysqli_fetch_assoc($workouts)) : ?>
         <tr>
-          <td><?php echo h($workout['id'])?></td>
-          <td><?php echo h($workout['workout_name'])?></td>
-          <td><?php echo h($workout['author'])?></td>
-          <td><?php echo h($workout['fkMetcon'])?></td>
-          <td><?php echo h($workout['workoutTime'])?></td>
-          <td><?php echo h($workout['instructions'])?></td>
-          <td><?php echo h($workout['stimulus'])?></td>
-          <td><?php echo h($workout['scales'])?></td>
+          <td><?= h($workout['id'])?></td>
+          <td><?= h($workout['workout_name'])?></td>
+          <td><?= h($workout['author'])?></td>
+          <td><?= h($workout['fkMetcon'])?></td>
+          <td><?= h($workout['workoutTime'])?></td>
+          <td><?= h($workout['instructions'])?></td>
+          <td><?= h($workout['stimulus'])?></td>
+          <td><?= h($workout['scales'])?></td>
           <td><a class="action" href="<?= url_for('/staff/workouts/view.php?id=' . h(u($workout['id'])));?>">View</a></td>
           <td><a class="action" href="<?= url_for('/staff/workouts/edit.php?id=' . h(u($workout['id'])));?>">Edit</a></td>
           <td>Delete</td>

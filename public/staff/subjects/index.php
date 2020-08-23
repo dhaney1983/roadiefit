@@ -14,7 +14,7 @@
     <h1>Subjects</h1>
 
     <div class="actions">
-      <a class="action" href="<?php echo url_for('/staff/subjects/new.php'); ?>">Create New Subject</a>
+      <a class="action" href="<?= url_for('/staff/subjects/new.php'); ?>">Create New Subject</a>
     </div>
 
   	<table class="list">
@@ -30,12 +30,12 @@
 
       <?php while ($subject = mysqli_fetch_assoc($subject_set)) : ?>
         <tr>
-          <td><?php echo h($subject['id']); ?></td>
-          <td><?php echo h($subject['position']); ?></td>
-          <td><?php echo $subject['visible'] == 1 ? 'true' : 'false'; ?></td>
-    	    <td><?php echo h($subject['menu_name']); ?></td>
-          <td><a class="action" href="<?php echo url_for('/staff/subjects/show.php?id=' . h(u($subject['id']))); ?>">View</a></td>
-          <td><a class="action" href="<?php echo url_for('/staff/subjects/edit.php?id=' . h(u($subject['id']))); ?>">Edit</a></td>
+          <td><?= h($subject['id']); ?></td>
+          <td><?= h($subject['position']); ?></td>
+          <td><?= $subject['visible'] == 1 ? 'true' : 'false'; ?></td>
+    	    <td><?= h($subject['menu_name']); ?></td>
+          <td><a class="action" href="<?= url_for('/staff/subjects/view.php?id=' . h(u($subject['id']))); ?>">View</a></td>
+          <td><a class="action" href="<?= url_for('/staff/subjects/edit.php?id=' . h(u($subject['id']))); ?>">Edit</a></td>
           <td><a class="action" href="">Delete</a></td>
     	  </tr>
       <?php endwhile; ?>
