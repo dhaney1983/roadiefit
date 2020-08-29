@@ -8,7 +8,7 @@ if(!isset($_GET['id'])) {
 $id = $_GET['id'];
 $workout_name = '';
 $author = '';
-$metcon = '';
+$metric = '';
 $time = '';
 $instructions = '';
 $stimulus = '';
@@ -21,7 +21,7 @@ if(is_post_request()) {
   // Handle form values sent by new.php
   $workout_name = $_POST['workout_name'] ?? '';
   $author = $_POST['author'] ?? '';
-  $metcon = $_POST['fkMetcon'] ?? '';
+  $metric = $_POST['metric_id'] ?? '';
   $time = $_POST['time'] ?? '';
   $instructions = $_POST['instructions'] ?? '';
   $stimulus = $_POST['stimulus'] ?? '';
@@ -30,7 +30,7 @@ if(is_post_request()) {
   echo "Form parameters<br />";
   echo "Workout Name: " . $workout_name . "<br />";
   echo "Author: " . $author . "<br />";
-  echo "Metcon: " . $metcon . "<br />";
+  echo "Metric: " . $metric . "<br />";
   echo "Time: " . $time . "<br />";
   echo "Instructions: " . $instructions . "<br />";
   echo "Stimulus: " . $stimulus . "<br />";
@@ -59,8 +59,8 @@ if(is_post_request()) {
             <dd><input type="text" name="author" value="<?= h($author); ?>" /></dd>
           </dl>
           <dl>
-            <dt>Metcon</dt>
-            <dd><input type="text" name="fkMetcon" value="<?= h($metcon); ?>" /></dd>
+            <dt>Metric</dt>
+            <dd><input type="text" name="metric_id" value="<?= h($metric); ?>" /></dd>
           </dl>
           <dl>
             <dt>Time</dt>

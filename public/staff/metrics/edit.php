@@ -2,37 +2,37 @@
 
 require_once('../../../private/initialize.php');
 
-$metcon = '';
+$metric = '';
 $description = '';
 
 if(is_post_request()) {
 
   // Handle form values sent by new.php
 
-  $metcon = $_POST['metcon'] ?? '';
+  $metric = $_POST['metric'] ?? '';
   $description = $_POST['description'] ?? '';
 
   echo "Form parameters<br />";
-  echo "Metcon: " . $metcon . "<br />";
+  echo "Metric: " . $metric . "<br />";
   echo "Description: " . $description . "<br />";
 }
 
 ?>
 
-<?php $page_title = 'Edit Metcon'; ?>
+<?php $page_title = 'Edit Metric'; ?>
 <?php include(SHARED_PATH . '/staff_header.php'); ?>
 
 <div id="content">
 
-  <a class="back-link" href="<?php echo url_for('/staff/metcon/index.php'); ?>">&laquo; Back to List</a>
+  <a class="back-link" href="<?php echo url_for('/staff/metrics/index.php'); ?>">&laquo; Back to List</a>
 
   <div class="page edit">
-    <h1>Edit Metcon</h1>
+    <h1>Edit Metric</h1>
 
-    <form action="<?= url_for('/staff/metcon/edit.php'); ?>" method="post">
+    <form action="<?= url_for('/staff/metric/edit.php'); ?>" method="post">
       <dl>
         <dt>Name</dt>
-        <dd><input type="text" name="metcon" value="<?=h($metcon)?>" /></dd>
+        <dd><input type="text" name="metric" value="<?=h($metric)?>" /></dd>
       </dl>
       <dl>
         <dt>Description</dt>
@@ -40,7 +40,7 @@ if(is_post_request()) {
       </dl>
 
       <div id="operations">
-        <input type="submit" value="Update Metcon" />
+        <input type="submit" value="Update Metric" />
       </div>
     </form>
 

@@ -17,19 +17,25 @@
     <table class="list">
       <tr>
         <th>ID</th>
-        <th>Name</th>
+        <th>Category ID</th>
         <th>Category</th>
-        <th>Video Link</th>
+        <th>Name</th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
       </tr>
       <?php while ($exercise = mysqli_fetch_assoc($exercise_set)) :?>
         <tr>
-          <td><?= $exercise['id']?></td>
-          <td><?= $exercise['exercise_name']?></td>
-          <td><?= $exercise['category']?></td>
-          <td><a href="<?= $subject['vidLink']?>">Video Link</a></td>
+          <td><?= h($exercise['id'])?></td>
+          <td><?= h($exercise['category'])?></td>
+          <td><?php
+          if (isset($exercise['category_id'])) {
+            $category = find_exercise_category_by_id($exercise['category_id']);
+            echo $category['exercise_category'];
+          }
+
+          ?></td>
+          <td><?= h($exercise['exercise_name'])?></td>
           <td><a class="action" href="<?= url_for('/staff/exercises/view.php?id=' . h(u($exercise['id'])));?>">View</a></td>
           <td><a class="action" href="<?= url_for('/staff/exercises/edit.php?id=' . h(u($exercise['id'])));?>">Edit</a></td>
           <td>Delete</td>

@@ -1,15 +1,16 @@
-<?php require_once('../../../private/initialize.php');
+<?php
 
-$test = $_GET['test'] ?? '';
-if($test == '404') {
-  error404();
-} elseif($test == '500'){
-  error500();
-}elseif($test == 'redirect') {
-  redirect_to(url_for('/staff/exercises/index.php'));
+require_once('../../../private/initialize.php');
+
+if (is_post_request()) {
+
+} else {
+
 }
 
+
 ?>
+<?php $page_title = 'Create Exercise'; ?>
 <?php include(SHARED_PATH . '/staff_header.php');?>
 
 <div id="content">
@@ -24,7 +25,16 @@ if($test == '404') {
 
       <dl>
         <dt>Category</dt>
-        <dd><input type="text" name="category" value""></dd>
+        <dd><select name="category_id">
+          <?php
+            $catagories_set = find_all_exercise_categories();
+
+            while ($category = mysqli_fetch_assoc($catagories_set)) {
+              echo "<option value=\"" . h($category['id']) . "\">" . $category['exercise_category'] . "</option>";
+            }?>
+        </select>
+        <?php mysqli_free_result($catagories_set);?>
+      </dd>
       </dl>
 
       <dl>
@@ -34,7 +44,7 @@ if($test == '404') {
 
       <dl>
         <dt>Instructions</dt>
-        <dd><textarea name="instructions" id="comments" cols="30" rows="20"></textarea></dd>
+        <dd><textarea name="instruction" id="comments" cols="30" rows="20"></textarea></dd>
       </dl>
       <div id="operations">
         <input type="submit" value="Submit New Exercise" />

@@ -3,6 +3,7 @@ require_once('../../../private/initialize.php');
 $id = $_GET['id'] ?? '1'; // PHP > 7.0
 $page = find_page_by_id($id);
 
+
 ?>
 
 <?php $page_title = 'Show Page'; ?>
@@ -13,9 +14,10 @@ $page = find_page_by_id($id);
   <div class="view pages">
     <h1>Page: <?= $page['menu_name']; ?></h1>
     <div class="attributes">
+      <?php $subject = find_subject_by_id($page['subject_id']);?>
       <dl>
         <dt>Subject</dt>
-        <dd><?= $page['subject_id'];?></dd>
+        <dd><?= $subject['menu_name'];?></dd>
       </dl>
       <dl>
         <dt>Position</dt>

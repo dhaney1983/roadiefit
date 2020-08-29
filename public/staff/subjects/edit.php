@@ -22,6 +22,12 @@ if(is_post_request()) {
   echo "Menu name: " . $menu_name . "<br />";
   echo "Position: " . $position . "<br />";
   echo "Visible: " . $visible . "<br />";
+} else {
+  $subject = find_subject_by_id($id);
+  $subject_set = find_all_subjects();
+  $subject_count = mysqli_num_rows($subject_set);
+  mysqli_free_result($subject_set);
+
 }
 
 ?>
@@ -45,8 +51,16 @@ if(is_post_request()) {
         <dt>Position</dt>
         <dd>
           <select name="position">
-            <option value="1"<?php if($position == "1") { echo " selected"; } ?>>1</option>
-          </select>
+          <?php
+            for($i=1; $i <= $subject_count; $i++) {
+              echo "<option value\"{i}\"";
+              if($subject["position"] == $i) {
+                echo "selected";
+              }
+              echo">{$i}</option>";
+              }
+           ?>
+         </select>
         </dd>
       </dl>
       <dl>

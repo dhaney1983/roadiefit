@@ -16,8 +16,13 @@
         <ul>
           <li><a href="<?= url_for('staff/workouts/index.php'); ?>">Workouts</a></li>
           <li><a href="<?= url_for('staff/exercises/index.php'); ?>">Exercises</a></li>
-          <li><a href="<?= url_for('staff/metcon/index.php'); ?>">Metcon</a></li>
         </ul>
+        <h3>Other</h3>
+          <ul>
+            <li><a href="<?= url_for('staff/metrics/index.php'); ?>">Workout Metrics</a></li>
+            <li><a href="<?= url_for('staff/workout_types/index.php'); ?>">Workout Types</a></li>
+            <li><a href="<?= url_for('staff/exercise_categories/index.php'); ?>">Exercise Categories</a></li>
+          </ul>
       </div>
 
     </div>

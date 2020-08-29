@@ -1,4 +1,4 @@
-<?php
+ <?php
   if(!isset($page_title)) { $page_title = 'Staff Area';}
 ?>
 <!DOCTYPE html>
@@ -11,7 +11,7 @@
   </head>
   <body>
     <header>
-      <h1>Roadiefit Staff Area</h1>
+      <h1>RoadieFit Staff Area</h1>
     </header>
 
     <navigation>

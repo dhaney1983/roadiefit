@@ -18,6 +18,7 @@
   	<table class="list">
   	  <tr>
         <th>ID</th>
+        <th>Subject</th>
         <th>Position</th>
         <th>Visible</th>
   	    <th>Name</th>
@@ -26,9 +27,13 @@
         <th>&nbsp;</th>
   	  </tr>
 
-      <?php while ($page = mysqli_fetch_assoc($page_set)) : ?>
+      <?php
+        while ($page = mysqli_fetch_assoc($page_set)) :
+        $subject = find_subject_by_id($page['subject_id']);
+        ?>
         <tr>
           <td><?= h($page['id']); ?></td>
+          <td><?= h($subject['menu_name']); ?></td>
           <td><?= h($page['position']); ?></td>
           <td><?= $page['visible'] == 1 ? 'true' : 'false'; ?></td>
     	    <td><?= h($page['menu_name']); ?></td>

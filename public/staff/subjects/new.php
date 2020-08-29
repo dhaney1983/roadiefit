@@ -1,17 +1,18 @@
 <?php
-
 require_once('../../../private/initialize.php');
 
-$test = $_GET['test'] ?? '';
+if(is_post_request()) {
 
-if($test == '404') {
-  error_404();
-} elseif($test == '500') {
-  error_500();
-} elseif($test == 'redirect') {
-  redirect_to(url_for('/staff/subjects/index.php'));
+
+} else {
+
+  $subject_set = find_all_subjects();
+  $subject_count = mysqli_num_rows($subject_set) +1;
+  mysqli_free_result($subject_set);
+
 }
 ?>
+
 
 <?php $page_title = 'Create Subject'; ?>
 <?php include(SHARED_PATH . '/staff_header.php'); ?>
@@ -32,7 +33,15 @@ if($test == '404') {
         <dt>Position</dt>
         <dd>
           <select name="position">
-            <option value="1">1</option>
+            <?php
+            for ($i=1; $i <= $subject_count ; $i++) {
+              if ($i == $subject_count) {
+                echo "<option value=\"{$i}\" selected>{$i}</option>";
+              } else {
+                echo "<option value=\"{$i}\">{$i}</option>";
+              }
+            }
+            ?>
           </select>
         </dd>
       </dl>

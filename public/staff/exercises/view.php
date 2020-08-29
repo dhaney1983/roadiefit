@@ -30,11 +30,10 @@ $exercise = find_exercise_by_id($id);
       </dl>
       <dl>
         <dt>Instruction Video</dt>
-        <dd><iframe width="560" height="315" src="<?= h($exercise['vidLink']) ?>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></dd>
+        <dd><iframe width="920" height="518" src="<?= h($exercise['vidLink']) ?>" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></dd>
       </dl>
 
     </div>
-
 
   </div>
  </div>
