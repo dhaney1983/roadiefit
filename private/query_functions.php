@@ -19,19 +19,19 @@ function find_exercise_category_by_id($id) {
   return $exercise_category; // returns assoc. array
 }
 
-function insert_exercise_category($execise_category, $description) {
+function insert_exercise_category($exercise_category) {
   global $db;
-  $sql = "INSERT INTO exercise_categories ";
-  $sql .= "(exercise_category, description) VALUES (";
-  $sql .= "'" . $execise_category . "', ";
-  $sql .= "'" . $description . "'";
+  $sql = "INSERT INTO exercise_categories (exercise_category, description) ";
+  $sql .= "VALUES (";
+  $sql .= "'" . $exercise_category['exercise_category'] . "', ";
+  $sql .= "'" . $exercise_category['description'] . "'";
   $sql .= ")";
   $result = mysqli_query($db, $sql);
   if ($result) {
     return true;
   }
   echo mysqli_error($db);
-  db_disconnect();
+  db_disconnect($db);
   exit;
 }
 
@@ -57,15 +57,15 @@ function insert_exercise_category($execise_category, $description) {
     return $exercise; // returns assoc. array
   }
 
-  function insert_exercise($exerciseName, $category_id, $vidLink, $instruction) {
+  function insert_exercise($exercise) {
     global $db;
     $sql = "INSERT INTO exercises ";
     $sql .= "(exercise_name, category_id, vidLink, instruction) ";
     $sql .= "VALUES (";
-    $sql .= "'" . $exerciseName . "',";
-    $sql .= "'" . $category_id . "',";
-    $sql .= "'" . $vidLink . "',";
-    $sql .= "'" . $instruction . "'";
+    $sql .= "'" . $exercise['exercise_name'] . "',";
+    $sql .= "'" . $exercise['category_id'] . "',";
+    $sql .= "'" . $exercise['vidLink'] . "',";
+    $sql .= "'" . $exercise['instruction'] . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if($result) {
@@ -96,12 +96,12 @@ function insert_exercise_category($execise_category, $description) {
     return $metric;
   }
 
-  function insert_metric($metric, $description) {
+  function insert_metric($metric) {
     global $db;
     $sql = "INSERT INTO metrics ";
     $sql .= "(metric, description) VALUES (";
-    $sql .= "'" . $metric . "', ";
-    $sql .= "'" . $description . "'";
+    $sql .= "'" . $metric['metric'] . "', ";
+    $sql .= "'" . $metric['description'] . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -132,15 +132,15 @@ function insert_exercise_category($execise_category, $description) {
     return $page;
   }
 
-  function insert_page($menu_name, $subject_id, $position, $visible, $content) {
+  function insert_page($page) {
     global $db;
     $sql = "INSERT INTO pages ";
     $sql .= "(menu_name, subject_id, position, visible, content) Values (";
-    $sql .= "'" . $menu_name . "', ";
-    $sql .= "'" . $subject_id . "', ";
-    $sql .= "'" . $position . "', ";
-    $sql .= "'" . $visible . "', ";
-    $sql .= "'" . $content . "'";
+    $sql .= "'" . $page['menu_name'] . "', ";
+    $sql .= "'" . $page['subject_id'] . "', ";
+    $sql .= "'" . $page['position'] . "', ";
+    $sql .= "'" . $page['visible'] . "', ";
+    $sql .= "'" . $page['content'] . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -172,13 +172,13 @@ function insert_exercise_category($execise_category, $description) {
     return $subject;
   }
 
-  function insert_subject($menu_name, $position, $visible) {
+  function insert_subject($subject) {
     global $db;
     $sql = "INSERT INTO subjects (menu_name, position, visible) ";
     $sql .= "VALUES (";
-    $sql .= "'" . $menu_name . "',";
-    $sql .= "'" . $position . "',";
-    $sql .= "'" . $visible . "'";
+    $sql .= "'" . $subject['menu_name'] . "',";
+    $sql .= "'" . $subject['position'] . "',";
+    $sql .= "'" . $subject['visible'] . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if($result) {
@@ -187,10 +187,27 @@ function insert_exercise_category($execise_category, $description) {
 
       echo mysqli_error($db);
       db_disconnect($db);
-
       exit;
     }
   }
+
+  function update_subject($subject) {
+    global $db;
+    $sql = "UPDATE subjects SET ";
+    $sql .= "menu_name='" . $subject['menu_name'] . "', ";
+    $sql .= "position='" . $subject['position']. "', ";
+    $sql .= "visible='" . $subject['visible'] . "' ";
+    $sql .= "WHERE id='" . $subject['id'] . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if($result){
+      return true;
+    } else {
+    echo mysqli_error($db);
+    db_disconnect($db);
+    exit;
+  }
+}
 //Workout functions
   function find_all_workouts() {
     global $db;
@@ -201,18 +218,18 @@ function insert_exercise_category($execise_category, $description) {
     return $result;
   }
 
-  function insert_workout($workout_name, $author, $metric_id, $instructions, $stimulus, $scales, $workout_time, $workout_type_id){
+  function insert_workout($workout){
     global $db;
     $sql = "INSERT INTO workouts (workout_name, author, metric_id, instructions, stimulus, scales, workout_time, workout_type_id) ";
     $sql .= "VALUES (";
-    $sql .= "'" . $workout_name . "',";
-    $sql .= "'" . $author . "',";
-    $sql .= "'" . $metric_id . "',";
-    $sql .= "'" . $instructions . "',";
-    $sql .= "'" . $stimulus . "',";
-    $sql .= "'" . $scales . "',";
-    $sql .= "'" . $workout_time . "',";
-    $sql .= "'" . $workout_type_id . "'";
+    $sql .= "'" . $workout['workout_name'] . "',";
+    $sql .= "'" . $workout['author'] . "',";
+    $sql .= "'" . $workout['metric_id'] . "',";
+    $sql .= "'" . $workout['instructions'] . "',";
+    $sql .= "'" . $workout['stimulus'] . "',";
+    $sql .= "'" . $workout['scales'] . "',";
+    $sql .= "'" . $workout['workout_time'] . "',";
+    $sql .= "'" . $workout['workout_type_id'] . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if($result){
@@ -253,14 +270,14 @@ function insert_exercise_category($execise_category, $description) {
       mysqli_free_result($result);
     }
 
-  function insert_workout_steps($step_order, $exercise_id, $workout_id, $reps) {
+  function insert_workout_steps($workout_step) {
     global $db;
     $sql = "INSERT INTO workout_steps ";
     $sql .= "(step_order, exercise_id, workout_id, reps) VALUES (";
-    $sql .= "'" . $step_order . "', ";
-    $sql .= "'" . $exercise_id . "', ";
-    $sql .= "'" . $workout_id . "', ";
-    $sql .= "'" . $reps . "'";
+    $sql .= "'" . $workout_step['step_order'] . "', ";
+    $sql .= "'" . $workout_step['exercise_id'] . "', ";
+    $sql .= "'" . $workout_step['workout_id'] . "', ";
+    $sql .= "'" . $workout_step['reps'] . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if ($result) {

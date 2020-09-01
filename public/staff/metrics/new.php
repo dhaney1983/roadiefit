@@ -1,10 +1,12 @@
-<?php require_once('../../../private/initialize.php');
+<?php
+
+require_once('../../../private/initialize.php');
 
 if(is_post_request()) {
 
 }
-
 ?>
+
 <?php $page_title = 'Create Metric'; ?>
 <?php include(SHARED_PATH . '/staff_header.php');?>
 

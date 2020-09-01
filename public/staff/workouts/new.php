@@ -19,7 +19,7 @@ if(is_post_request()){
       $workout['workout_type_id'] = $_POST['workout_type_id'] ?? '';
       $workout['submit'] = $_POST['submit'] ?? '';
 
-    $new_workout = insert_workout($workout['workout_name'], $workout['author'], $workout['metric_id'], $workout['instructions'], $workout['stimulus'], $workout['scales'],$workout['workout_time'] = $_POST['workout_time'], $workout['workout_type_id'] = $_POST['workout_type_id']);
+    $new_workout = insert_workout($workout);
     $new_id = mysqli_insert_id($db);
     $workout_steps = find_workout_steps_by_workout($new_id);
 
@@ -39,17 +39,17 @@ if(is_post_request()){
       $new_id = $_POST['workout_id'];
       $workout = find_workout_by_id($new_id);
 
-      $workout_set=[];
-        $workout_set['workout_id'] = $_POST['workout_id'] ?? '';
-        $workout_set['step_order'] = $_POST['step_order'] ?? '';
-        $workout_set['exercise_id'] = $_POST['exercise_id'] ?? '';
+      $workout_step=[];
+        $workout_step['workout_id'] = $_POST['workout_id'] ?? '';
+        $workout_step['step_order'] = $_POST['step_order'] ?? '';
+        $workout_step['exercise_id'] = $_POST['exercise_id'] ?? '';
         if ($_POST['reps'] > 0) {
-          $workout_set['reps'] = $_POST['reps'];
+          $workout_step['reps'] = $_POST['reps'];
         } else {
-          $workout_set['reps'] = "0";
+          $workout_step['reps'] = "0";
         }
 
-      insert_workout_steps($workout_set['step_order'], $workout_set['exercise_id'], $workout_set['workout_id'], $workout_set['reps']);
+      insert_workout_steps($workout_step);
       $workout_steps = find_workout_steps_by_workout($new_id);
 
     }

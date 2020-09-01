@@ -2,13 +2,6 @@
 
 require_once('../../../private/initialize.php');
 
-if (is_post_request()) {
-
-} else {
-
-}
-
-
 ?>
 <?php $page_title = 'Create Exercise'; ?>
 <?php include(SHARED_PATH . '/staff_header.php');?>

@@ -12,7 +12,7 @@ $workout[] = "";
   $workout['scales'] = $_POST['scales'] ?? '';
   $workout['workout_time'] = $_POST['workout_time'] ?? '';
   $workout['workout_type_id'] = $_POST['workout_type_id'] ?? '';
-  $result = insert_workout($workout['workout_name'], $workout['author'], $workout['metric_id'], $workout['instructions'], $workout['stimulus'], $workout['scales'], $workout['workout_time'], $workout['workout_type_id']);
+  $result = insert_workout($workout);
   $new_id = mysqli_insert_id($db);
   redirect_to(url_for('/staff/workouts/view.php?id=' . $new_id));
 
