@@ -308,4 +308,20 @@ function insert_exercise_category($exercise_category) {
     mysqli_free_result($result);
     return $workout_type;
   }
+
+  function insert_workout_type($workout_type) {
+    global $db;
+    $sql = "INSERT INTO workout_types ";
+    $sql .= "(workout_type, description) VALUES (";
+    $sql .= "'" . $workout_type['workout_type'] . "', ";
+    $sql .= "'" . $workout_type['description'] . "'";
+    $sql .= ")";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      return true;
+    }
+    echo mysqli_error($db);
+    db_disconnect();
+    exit;
+  }
  ?>
