@@ -1,40 +1,57 @@
 <?php
 // exercise category Functions
-function find_all_exercise_categories() {
-  global $db;
-  $sql = "SELECT * FROM exercise_categories ";
-  $result = mysqli_query($db, $sql);
-  confirm_result_set($result);
-  return $result;
-}
-
-function find_exercise_category_by_id($id) {
-  global $db;
-  $sql = "SELECT * FROM exercise_categories ";
-  $sql .= "WHERE id='" . $id . "'";
-  $result = mysqli_query($db, $sql);
-  confirm_result_set($result);
-  $exercise_category = mysqli_fetch_assoc($result);
-  mysqli_free_result($result);
-  return $exercise_category; // returns assoc. array
-}
-
-function insert_exercise_category($exercise_category) {
-  global $db;
-  $sql = "INSERT INTO exercise_categories (exercise_category, description) ";
-  $sql .= "VALUES (";
-  $sql .= "'" . $exercise_category['exercise_category'] . "', ";
-  $sql .= "'" . $exercise_category['description'] . "'";
-  $sql .= ")";
-  $result = mysqli_query($db, $sql);
-  if ($result) {
-    return true;
+  function find_all_exercise_categories() {
+    global $db;
+    $sql = "SELECT * FROM exercise_categories ";
+    $result = mysqli_query($db, $sql);
+    confirm_result_set($result);
+    return $result;
   }
-  echo mysqli_error($db);
-  db_disconnect($db);
-  exit;
-}
 
+  function find_exercise_category_by_id($id) {
+    global $db;
+    $sql = "SELECT * FROM exercise_categories ";
+    $sql .= "WHERE id='" . $id . "'";
+    $result = mysqli_query($db, $sql);
+    confirm_result_set($result);
+    $exercise_category = mysqli_fetch_assoc($result);
+    mysqli_free_result($result);
+    return $exercise_category; // returns assoc. array
+  }
+
+  function insert_exercise_category($exercise_category) {
+    global $db;
+    $sql = "INSERT INTO exercise_categories (exercise_category, description) ";
+    $sql .= "VALUES (";
+    $sql .= "'" . addslashes($exercise_category['exercise_category']) . "', ";
+    $sql .= "'" . addslashes($exercise_category['description']) . "'";
+    $sql .= ")";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      return true;
+    } else {
+    echo mysqli_error($db);
+    db_disconnect($db);
+    exit;
+    }
+  }
+
+  function update_exercise_category($exercise_category){
+    global $db;
+    $sql = "UPDATE exercise_categories SET ";
+    $sql .= "exercise_category='" . addslashes($exercise_category['exercise_category']) . "', ";
+    $sql .= "description='" . addslashes($exercise_category['description']) . "' ";
+    $sql .= "WHERE id='" . $exercise_category['id'] . "'";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if($result) {
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
+  }
 
 // exercises functions
   function find_all_exercises() {
@@ -62,10 +79,10 @@ function insert_exercise_category($exercise_category) {
     $sql = "INSERT INTO exercises ";
     $sql .= "(exercise_name, category_id, vidLink, instruction) ";
     $sql .= "VALUES (";
-    $sql .= "'" . $exercise['exercise_name'] . "',";
+    $sql .= "'" . addslashes($exercise['exercise_name']) . "',";
     $sql .= "'" . $exercise['category_id'] . "',";
     $sql .= "'" . $exercise['vidLink'] . "',";
-    $sql .= "'" . $exercise['instruction'] . "'";
+    $sql .= "'" . addslashes($exercise['instruction']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if($result) {
@@ -76,6 +93,27 @@ function insert_exercise_category($exercise_category) {
       exit;
     }
   }
+
+  function update_exercise($exercise) {
+    global $db;
+    $sql = "UPDATE exercises SET ";
+    $sql .= "exercise_name='" . addslashes($exercise['exercise_name']) . "', ";
+    $sql .= "category_id='" . $exercise['category_id'] . "', ";
+    $sql .= "vidLink='" . $exercise['vidLink'] . "', ";
+    $sql .= "instruction='" . addslashes($exercise['instruction']) . "' ";
+    $sql .= "WHERE id='" . $exercise['id'] . "' ";
+    $sql .= "LIMIT 1";
+    // echo $sql;
+    $result = mysqli_query($db, $sql);
+    if($result) {
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
+  }
+
 // Metric Functions
   function find_all_metrics() {
     global $db;
@@ -100,15 +138,33 @@ function insert_exercise_category($exercise_category) {
     global $db;
     $sql = "INSERT INTO metrics ";
     $sql .= "(metric, description) VALUES (";
-    $sql .= "'" . $metric['metric'] . "', ";
-    $sql .= "'" . $metric['description'] . "'";
+    $sql .= "'" . addslashes($metric['metric']) . "', ";
+    $sql .= "'" . addslashes($metric['description']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if ($result) {
       return true;
+    } else {
+    echo mysqli_error($db);
+    db_disconnect($db);
+    exit;
+    }
+  }
+
+  function update_metric($metric){
+    global $db;
+    $sql = "UPDATE metrics SET ";
+    $sql .= "metric='" . addslashes($metric['metric']) . "', ";
+    $sql .= "description='" . addslashes($metric['description']) . "' ";
+    $sql .= "WHERE id='". $metric['id'] . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if($result) {
+      return true;
     }
     echo mysqli_error($db);
-    db_disconnect();
+    db_disconnect($db);
+    // echo $sql;
     exit;
   }
 
@@ -136,22 +192,42 @@ function insert_exercise_category($exercise_category) {
     global $db;
     $sql = "INSERT INTO pages ";
     $sql .= "(menu_name, subject_id, position, visible, content) Values (";
-    $sql .= "'" . $page['menu_name'] . "', ";
+    $sql .= "'" . addslashes($page['menu_name']) . "', ";
     $sql .= "'" . $page['subject_id'] . "', ";
     $sql .= "'" . $page['position'] . "', ";
     $sql .= "'" . $page['visible'] . "', ";
-    $sql .= "'" . $page['content'] . "'";
+    $sql .= "'" . addslashes($page['content']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
-    if ($result) {
+    if($result){
       return true;
     } else {
-
       echo mysqli_error($db);
       db_disconnect($db);
       exit;
     }
   }
+
+  function update_page($page) {
+    global $db;
+    $sql = "UPDATE pages SET ";
+    $sql .= "menu_name='" . addslashes($page['menu_name']) . "', ";
+    $sql .= "position='" . $page['position'] . "', ";
+    $sql .= "visible='" . $page['visible'] . "', ";
+    $sql .= "content='" . addslashes($page['content']) . "', ";
+    $sql .= "subject_id='" . $page['subject_id'] . "' ";
+    $sql .= "WHERE id='" . $page['id'] . "'";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if($result) {
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
+  }
+
 // Subject Functions
   function find_all_subjects() {
     global $db;
@@ -176,7 +252,7 @@ function insert_exercise_category($exercise_category) {
     global $db;
     $sql = "INSERT INTO subjects (menu_name, position, visible) ";
     $sql .= "VALUES (";
-    $sql .= "'" . $subject['menu_name'] . "',";
+    $sql .= "'" . addslashes($subject['menu_name']) . "',";
     $sql .= "'" . $subject['position'] . "',";
     $sql .= "'" . $subject['visible'] . "'";
     $sql .= ")";
@@ -184,7 +260,6 @@ function insert_exercise_category($exercise_category) {
     if($result) {
       return true;
     } else {
-
       echo mysqli_error($db);
       db_disconnect($db);
       exit;
@@ -194,7 +269,7 @@ function insert_exercise_category($exercise_category) {
   function update_subject($subject) {
     global $db;
     $sql = "UPDATE subjects SET ";
-    $sql .= "menu_name='" . $subject['menu_name'] . "', ";
+    $sql .= "menu_name='" . addslashes($subject['menu_name']) . "', ";
     $sql .= "position='" . $subject['position']. "', ";
     $sql .= "visible='" . $subject['visible'] . "' ";
     $sql .= "WHERE id='" . $subject['id'] . "' ";
@@ -203,11 +278,11 @@ function insert_exercise_category($exercise_category) {
     if($result){
       return true;
     } else {
-    echo mysqli_error($db);
-    db_disconnect($db);
+      echo mysqli_error($db);
+      db_disconnect($db);
     exit;
+    }
   }
-}
 //Workout functions
   function find_all_workouts() {
     global $db;
@@ -222,12 +297,12 @@ function insert_exercise_category($exercise_category) {
     global $db;
     $sql = "INSERT INTO workouts (workout_name, author, metric_id, instructions, stimulus, scales, workout_time, workout_type_id) ";
     $sql .= "VALUES (";
-    $sql .= "'" . $workout['workout_name'] . "',";
-    $sql .= "'" . $workout['author'] . "',";
-    $sql .= "'" . $workout['metric_id'] . "',";
-    $sql .= "'" . $workout['instructions'] . "',";
-    $sql .= "'" . $workout['stimulus'] . "',";
-    $sql .= "'" . $workout['scales'] . "',";
+    $sql .= "'" . addslashes($workout['workout_name']) . "',";
+    $sql .= "'" . addslashes($workout['author']) . "',";
+    $sql .= "'" .$workout['metric_id'] . "',";
+    $sql .= "'" . addslashes($workout['instructions']) . "',";
+    $sql .= "'" . addslashes($workout['stimulus']) . "',";
+    $sql .= "'" . addslashes($workout['scales']) . "',";
     $sql .= "'" . $workout['workout_time'] . "',";
     $sql .= "'" . $workout['workout_type_id'] . "'";
     $sql .= ")";
@@ -237,6 +312,7 @@ function insert_exercise_category($exercise_category) {
     } else {
       echo mysqli_error($db);
       db_disconnect($db);
+      exit;
     }
   }
 
@@ -248,6 +324,28 @@ function insert_exercise_category($exercise_category) {
     $subject = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
     return $subject;
+  }
+
+  function update_workout($workout){
+    global $db;
+    $sql = "UPDATE workouts SET ";
+    $sql .= "workout_name='" . addslashes($workout['workout_name']) . "',";
+    $sql .= "author='" . addslashes($workout['author']) . "',";
+    $sql .= "metric_id='" . $workout['metric_id'] . "',";
+    $sql .= "instructions='" . addslashes($workout['instructions']) . "',";
+    $sql .= "stimulus='" . addslashes($workout['stimulus']) . "',";
+    $sql .= "scales='" . addslashes($workout['scales']) . "',";
+    $sql .= "workout_time='" . $workout['workout_time'] . "',";
+    $sql .= "workout_type_id='" . $workout['workout_type_id'] . "' ";
+    $sql .= "WHERE id='" . $workout['id'] . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if($result){
+      return true;
+    }
+    echo mysqli_error($db);
+    db_disconnect($db);
+    exit;
   }
 
   // Workout Step functions
@@ -282,10 +380,11 @@ function insert_exercise_category($exercise_category) {
     $result = mysqli_query($db, $sql);
     if ($result) {
       return true;
-    }
+    } else {
     echo mysqli_error($db);
     db_disconnect($db);
     exit;
+    }
   }
 
 
@@ -313,15 +412,34 @@ function insert_exercise_category($exercise_category) {
     global $db;
     $sql = "INSERT INTO workout_types ";
     $sql .= "(workout_type, description) VALUES (";
-    $sql .= "'" . $workout_type['workout_type'] . "', ";
-    $sql .= "'" . $workout_type['description'] . "'";
+    $sql .= "'" . addslashes($workout_type['workout_type']) . "', ";
+    $sql .= "'" . addslashes($workout_type['description']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if ($result) {
       return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
     }
-    echo mysqli_error($db);
-    db_disconnect();
-    exit;
   }
+
+  function update_workout_type($workout_type){
+    global $db;
+    $sql = "UPDATE workout_types SET ";
+    $sql .= "workout_type='" . addslashes($workout_type['workout_type']) . "', ";
+    $sql .= "description='" . addslashes($workout_type['description']) . "' ";
+    $sql .= "WHERE id='" . $workout_type['id'] . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if($result){
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
+  }
+
  ?>

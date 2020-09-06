@@ -2,6 +2,7 @@
 $id = $_GET['id'] ?? '1';
 $workout = find_workout_by_id($id);
 $metric = find_metric_by_id($workout['metric_id']);
+$workout_type = find_workout_type_by_id($workout['workout_type_id']);
 $workoutSteps_set = find_workout_steps_by_workout($id);
  ?>
 
@@ -19,6 +20,10 @@ $workoutSteps_set = find_workout_steps_by_workout($id);
               <dl>
                 <dt>Author</dt>
                 <dd><?= h($workout['author']); ?></dd>
+              </dl>
+              <dl>
+                <dt>Workout Type</dt>
+                <dd><?= h($workout_type['workout_type']); ?></dd>
               </dl>
               <dl>
                 <dt>Metric</dt>

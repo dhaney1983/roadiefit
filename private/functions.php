@@ -41,4 +41,11 @@ function is_post_request(){
 function is_get_request(){
   return $_SERVER['REQUEST_METHOD'] == 'GET';
 }
+
+function sanitize($str){
+	if (get_magic_quotes_gpc()) $str=stripslashes($str);
+	if (function_exists('mysql_real_escape_string')) {
+		return mysql_real_escape_string($str);
+	} else return addslashes($str);
+}
 ?>

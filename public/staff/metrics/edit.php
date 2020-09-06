@@ -2,19 +2,24 @@
 
 require_once('../../../private/initialize.php');
 
-$metric = '';
-$description = '';
+if(!isset($_GET['id'])) {
+  redirect_to(url_for('/staff/pages/index.php'));
+}
+
+$id = $_GET['id'];
 
 if(is_post_request()) {
 
   // Handle form values sent by new.php
 
-  $metric = $_POST['metric'] ?? '';
-  $description = $_POST['description'] ?? '';
-
-  echo "Form parameters<br />";
-  echo "Metric: " . $metric . "<br />";
-  echo "Description: " . $description . "<br />";
+  $metric = [];
+  $metric['id'] = $id;
+  $metric['metric'] = $_POST['metric'] ?? '';
+  $metric['description'] = $_POST['description'] ?? '';
+  $result = update_metric($metric);
+  redirect_to(url_for('/staff/metrics/view.php?id=' . h(u($id))));
+} else {
+  $metric = find_metric_by_id($id);
 }
 
 ?>
@@ -29,18 +34,18 @@ if(is_post_request()) {
   <div class="page edit">
     <h1>Edit Metric</h1>
 
-    <form action="<?= url_for('/staff/metric/edit.php'); ?>" method="post">
+    <form action="<?= url_for('/staff/workout_types/edit.php'); ?>" method="post">
       <dl>
         <dt>Name</dt>
-        <dd><input type="text" name="metric" value="<?=h($metric)?>" /></dd>
+        <dd><input type="text" name="workout_type" value="" /></dd>
       </dl>
       <dl>
         <dt>Description</dt>
-        <dd><input type="text" name="description" value="<?= h($description) ?>" /></dd>
+        <dd><input type="text" name="description" value="" /></dd>
       </dl>
 
       <div id="operations">
-        <input type="submit" value="Update Metric" />
+        <input type="submit" value="Edit New Workout Type" />
       </div>
     </form>
 

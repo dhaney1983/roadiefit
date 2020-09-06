@@ -88,7 +88,7 @@ if(is_post_request()){
       <form action="<?= url_for('/staff/workouts/new.php'); ?>" method="post">
         <dl>
           <dt>Workout Name</dt>
-          <dd><input type="text" name="workout_name" value="<?= h(u($workout['workout_name'])) ?>" /></dd>
+          <dd><input type="text" name="workout_name" value="<?= h($workout['workout_name']) ?>" /></dd>
         </dl>
         <dl>
           <dt>Workout Type</dt>
@@ -135,19 +135,19 @@ if(is_post_request()){
         </dl>
         <dl>
           <dt>Time</dt>
-          <dd><input type="text" name="workout_time" value="<?=$workout['workout_time'] ?>" /></dd>
+          <dd><input type="text" name="workout_time" value="<?=h($workout['workout_time']) ?>" /></dd>
         </dl>
         <dl>
           <dt>Instruction</dt>
-          <dd><textarea name="instructions" id="comments" cols="30" rows="10"><?= $workout['instructions']; ?></textarea></dd>
+          <dd><textarea name="instructions" id="comments" cols="30" rows="10"><?= h($workout['instructions']); ?></textarea></dd>
         </dl>
         <dl>
           <dt>Stimulus</dt>
-          <dd><textarea name="stimulus" id="comments" cols="30" rows="10"><?= $workout['stimulus']; ?></textarea></dd>
+          <dd><textarea name="stimulus" id="comments" cols="30" rows="10"><?= h($workout['stimulus']); ?></textarea></dd>
         </dl>
         <dl>
           <dt>Scales</dt>
-          <dd><textarea name="scales" id="comments" cols="30" rows="10"><?= $workout['scales']; ?></textarea></dd>
+          <dd><textarea name="scales" id="comments" cols="30" rows="10"><?= h($workout['scales']); ?></textarea></dd>
         </dl>
         <div id="operations">
           <input type="submit" name="submit" value="workout" /></form>
@@ -157,11 +157,59 @@ if(is_post_request()){
     <td alight="left" valign="top" width="460">
       <!-- If post request has been submitted, from either form, exercise_step.php is included -->
       <?php
-      if (is_post_request()){
-        include('exercise_steps.php');
-      }
-      ?>
-      <?php ?>
+      if (is_post_request()): ?>
+      <!-- Exercise Steps Table -->
+      <table border="0" align="left" valign="top" class="list">
+        <tr>
+          <!-- Header -->
+          <th colspan="4">Exercises</th>
+        </tr>
+        <tr>
+          <th width="75">Order</th>
+          <th>Exercise</th>
+          <th>Reps</th>
+          <th>&nbsp;</th>
+        </tr>
+
+        <!-- New Exercise steps form -->
+        <tr><form action="<?= url_for('/staff/workouts/new.php'); ?>" method="post">
+          <td><input type="text" size="5" name="step_order" value="" /></td>
+          <td>
+            <select name="exercise_id" />
+            <?php
+            $exercises_set = find_all_exercises();
+            while($exercise = mysqli_fetch_assoc($exercises_set)){
+              echo "<option value=\"" . h($exercise['id']) . "\"";
+              echo ">" . h($exercise['exercise_name']) . "</option>";
+            }
+            mysqli_free_result($exercises_set);
+             ?>
+           </td>
+            <td><input type="text" size="8" name="reps" value=""  /></td>
+            <td>
+              <input type="hidden" name="workout_id" value="<?php
+                echo $new_id;
+              ?>">
+              <input type="submit" name="submit" value="Add" /></form>
+            </td>
+          </form>
+        </tr>
+
+        <!-- exercise steps loop generating table -->
+        <?php
+          while($workout_step = mysqli_fetch_assoc($workout_steps)){
+            $exerciseName = find_exercise_by_id($workout_step['exercise_id']);
+            echo "<tr>";
+            echo "<td>{$workout_step['step_order']}</td>";
+            echo "<td>{$exerciseName['exercise_name']}</td>";
+            echo "<td>{$workout_step['reps']}</td>";
+            echo "<td>" . "delete" . "</td>";
+            echo "</tr>";
+          }
+         ?>
+      </table>
+    <?php endif;?>
+
     </td>
   </tr>
 </table>

@@ -5,22 +5,22 @@ if(!isset($_GET['id'])){
 }
 
 $id = $_GET['id'];
-$exercise_name = '';
-$category = '';
-$instruction = '';
-$vidLink = '';
+
 
 if (is_post_request()) {
-  $exercise_name = $_POST['exercise_name'] ?? '';
-  $category = $_POST['category'] ?? '';
-  $instruction = $_POST['instructions'] ?? '';
-  $vidLink = $_POST['vidLink'] ?? '';
+  $exercise =  [''];
+  $exercise['category_id'] = $_POST['category_id'] ?? '';
+  $exercise['category'] = $_POST['category'] ?? '';
+  $exercise['exercise_name'] = $_POST['exercise_name'] ?? '';
+  $exercise['instruction'] = $_POST['instruction'] ?? '';
+  $exercise['vidLink'] = $_POST['vidLink'] ?? '';
+  $exercise['id'] = $id;
+$result = update_exercise($exercise);
+redirect_to(url_for('/staff/exercises/view.php?id=' . h(u($id))));
 
-  echo 'Form Parameters<br />';
-  echo 'Exercise Name: ' . $exercise_name . '<br />';
-  echo 'Category: ' . $category . '<br />';
-  echo 'vidLink: ' . $vidLink . '<br />';
-  echo 'Instruction: ' . $instruction . '<br />';
+
+} else {
+  $exercise = find_exercise_by_id($id);
 }
 
 ?>
@@ -33,22 +33,39 @@ if (is_post_request()) {
     <form action="<?= url_for('/staff/exercises/edit.php?id=' . h(u($id)));?>" method="post">
       <dl>
         <dt>Exercise Name</dt>
-        <dd><input type="text" name="exercise_name" value="<?= $exercise_name; ?>"></dd>
+        <dd><input type="text" name="exercise_name" value="<?= h($exercise['exercise_name']); ?>"></dd>
+      </dl>
+
+      <dl>
+        <dt>OLD Category</dt>
+        <dd><?= $exercise['category']; ?></dd>
       </dl>
 
       <dl>
         <dt>Category</dt>
-        <dd><input type="text" name="category" value="<?= $category; ?>"></dd>
+        <dd><select name="category_id">
+          <?php
+          $exercise_category_set = find_all_exercise_categories();
+            while ($exercise_category = mysqli_fetch_assoc($exercise_category_set)) {
+              echo "<option value=\"" . h($exercise_category['id']) . "\"";
+              if ($exercise['category_id'] == $exercise_category['id']) {
+                echo " selected";
+              }
+              echo ">" . h($exercise_category['exercise_category']) . "</option>";
+            }
+          ?>
+        </select>
+        </dd>
       </dl>
 
       <dl>
         <dt>Video Link</dt>
-        <dd><input type="text" name="vidLink" value="<?= $vidLink; ?>"></dd>
+        <dd><input type="text" name="vidLink" value="<?= h($exercise['vidLink']); ?>"></dd>
       </dl>
 
       <dl>
         <dt>Instructions</dt>
-        <dd><textarea name="instructions" id="comments" cols="30" rows="20"><?= $instruction; ?></textarea></dd>
+        <dd><textarea name="instruction" id="comments" cols="30" rows="20"><?= h($exercise['instruction']); ?></textarea></dd>
       </dl>
       <div id="operations">
         <input type="submit" value="Edit Exercise" />

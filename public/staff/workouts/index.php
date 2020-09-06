@@ -16,7 +16,7 @@
         <th>ID</th>
         <th>Name</th>
         <th>Author</th>
-        <th>Metric</th>
+        <th>Type</th>
         <th>Metric</th>
         <th>Time</th>
         <th>&nbsp;</th>
@@ -27,14 +27,21 @@
         $metricName = find_metric_by_id($workout['metric_id']);
         $workoutType = find_workout_type_by_id($workout['workout_type_id']);
         ?>
-
         <tr>
           <td><?= h($workout['id'])?></td>
-          <td><?= h($workout['workout_name'])?></td>
-          <td><?= h($workout['author'])?></td>
-          <td><?= h($workoutType['workout_type'])?></td>
-          <td><?= h($metricName['metric'])?></td>
-          <td><?= h($workout['workout_time'])?></td>
+          <td><?= h($workout['workout_name']) ?? ''?></td>
+          <td><?= h($workout['author']) ?? '' ?></td>
+          <td><?php
+                if (isset($workoutType['id'])) {
+                  echo h($workoutType['workout_type']);
+                }echo "&nbsp";
+           ?></td>
+          <td><?php
+                if (isset($metricName['id'])) {
+                  echo h($metricName['metric']);
+                }echo "&nbsp";
+           ?></td>
+          <td><?= h($workout['workout_time'])?? '' ?></td>
           <td><a class="action" href="<?= url_for('/staff/workouts/view.php?id=' . h(u($workout['id'])));?>">View</a></td>
           <td><a class="action" href="<?= url_for('/staff/workouts/edit.php?id=' . h(u($workout['id'])));?>">Edit</a></td>
           <td>Delete</td>

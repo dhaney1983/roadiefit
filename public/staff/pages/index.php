@@ -18,10 +18,10 @@
   	<table class="list">
   	  <tr>
         <th>ID</th>
+        <th>Name</th>
         <th>Subject</th>
         <th>Position</th>
         <th>Visible</th>
-  	    <th>Name</th>
   	    <th>&nbsp;</th>
   	    <th>&nbsp;</th>
         <th>&nbsp;</th>
@@ -33,10 +33,10 @@
         ?>
         <tr>
           <td><?= h($page['id']); ?></td>
+          <td><?= h($page['menu_name']); ?></td>
           <td><?= h($subject['menu_name']); ?></td>
           <td><?= h($page['position']); ?></td>
           <td><?= $page['visible'] == 1 ? 'true' : 'false'; ?></td>
-    	    <td><?= h($page['menu_name']); ?></td>
           <td><a class="action" href="<?= url_for('/staff/pages/view.php?id=' . h(u($page['id']))); ?>">View</a></td>
           <td><a class="action" href="<?= url_for('/staff/pages/edit.php?id=' . h(u($page['id']))); ?>">Edit</a></td>
           <td><a class="action" href="">Delete</a></td>
