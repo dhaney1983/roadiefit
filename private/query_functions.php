@@ -53,6 +53,20 @@
     }
   }
 
+  function delete_exercise_categories($id){
+    global $db;
+    $sql = "DELETE FROM exercise_categories ";
+    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
+}
 // exercises functions
   function find_all_exercises() {
     global $db;
@@ -114,6 +128,21 @@
     }
   }
 
+  function delete_exercise($id) {
+    global $db;
+    $sql = "DELETE FROM exercises ";
+    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
+
+  }
 // Metric Functions
   function find_all_metrics() {
     global $db;
@@ -166,6 +195,21 @@
     db_disconnect($db);
     // echo $sql;
     exit;
+  }
+
+  function delete_metric($id){
+    global $db;
+    $sql = "DELETE FROM metrics ";
+    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
   }
 
 // Page functions
@@ -228,6 +272,20 @@
     }
   }
 
+  function delete_page($id){
+    global $db;
+    $sql = "DELETE FROM pages ";
+    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if($result){
+      return true;
+    } else {
+      echo mysqli_error($db, $sql);
+      db_disconnect($db);
+      exit;
+    }
+  }
 // Subject Functions
   function find_all_subjects() {
     global $db;
@@ -281,6 +339,21 @@
       echo mysqli_error($db);
       db_disconnect($db);
     exit;
+    }
+  }
+
+  function delete_subject($id){
+    global $db;
+    $sql = "DELETE FROM subjects ";
+    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
     }
   }
 //Workout functions
@@ -348,6 +421,22 @@
     exit;
   }
 
+  function delete_workout_and_steps($id){
+    global $db;
+    $sql = "DELETE FROM workouts ";
+    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      delete_related_workout_steps($id);
+      return true;
+    } else {
+    echo mysqli_error($db);
+    db_disconnect($db);
+    exit;
+    }
+  }
+
   // Workout Step functions
   function find_all_workout_steps() {
     global $db;
@@ -387,6 +476,19 @@
     }
   }
 
+  function delete_related_workout_steps($foreignKey){
+    global $db;
+    $sql = "DELETE FROM workout_steps ";
+    $sql .= "WHERE workout_id='" . $foreignKey . "'";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
+  }
 
   // Workout Type Functions
   function find_all_workout_types() {
@@ -434,6 +536,21 @@
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if($result){
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
+  }
+
+  function delete_workout_type($id){
+    global $db;
+    $sql = "DELETE FROM workout_types ";
+    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
       return true;
     } else {
       echo mysqli_error($db);

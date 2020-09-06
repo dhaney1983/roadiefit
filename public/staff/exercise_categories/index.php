@@ -34,7 +34,7 @@ $exercise_categories_set = find_all_exercise_categories();
     	    <td><?= h($exercise_category['description']); ?></td>
           <td><a class="action" href="<?= url_for('/staff/exercise_categories/view.php?id=' . h(u($exercise_category['id']))); ?>">View</a></td>
           <td><a class="action" href="<?= url_for('/staff/exercise_categories/edit.php?id=' . h(u($exercise_category['id']))); ?>">Edit</a></td>
-          <td><a class="action" href="">Delete</a></td>
+          <td><a class="action" href="<?= url_for('/staff/exercise_categories/delete.php?id=' . h(u($exercise_category['id']))); ?>">Delete</a></td>
     	  </tr>
       <?php endwhile; ?>
   	</table>

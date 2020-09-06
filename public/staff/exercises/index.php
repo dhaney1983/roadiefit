@@ -38,7 +38,7 @@
           <td><?= h($exercise['exercise_name'])?></td>
           <td><a class="action" href="<?= url_for('/staff/exercises/view.php?id=' . h(u($exercise['id'])));?>">View</a></td>
           <td><a class="action" href="<?= url_for('/staff/exercises/edit.php?id=' . h(u($exercise['id'])));?>">Edit</a></td>
-          <td>Delete</td>
+          <td><a class="action" href="<?= url_for('/staff/exercises/delete.php?id=' . h(u($exercise['id'])));?>">Delete</a></td>
         </tr>
       <?php endwhile; ?>
     </table>

@@ -29,7 +29,7 @@
           <td><?= $metric['description']?></td>
           <td><a class="action" href="<?= url_for('/staff/metrics/view.php?id=' . h(u($metric['id'])));?>">View</a></td>
           <td><a class="action" href="<?= url_for('/staff/metrics/edit.php?id=' . h(u($metric['id'])));?>">Edit</a></td>
-          <td>Delete</td>
+          <td><a class="action" href="<?= url_for('/staff/metrics/delete.php?id=' . h(u($metric['id'])));?>">Delete</a></td>
         </tr>
       <?php endwhile; ?>
     </table>
