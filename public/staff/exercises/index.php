@@ -17,7 +17,6 @@
     <table class="list">
       <tr>
         <th>ID</th>
-        <th>Category ID</th>
         <th>Category</th>
         <th>Name</th>
         <th>&nbsp;</th>
@@ -27,7 +26,6 @@
       <?php while ($exercise = mysqli_fetch_assoc($exercise_set)) :?>
         <tr>
           <td><?= h($exercise['id'])?></td>
-          <td><?= h($exercise['category'])?></td>
           <td><?php
           if (isset($exercise['category_id'])) {
             $category = find_exercise_category_by_id($exercise['category_id']);

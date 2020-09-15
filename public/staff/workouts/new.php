@@ -6,13 +6,16 @@
   # Create workout array
   # Submit new workout query to SQL
   # Receive workout ID
+  # Redirect to edit page
 if(is_post_request()){
   if($_POST['submit'] == 'workout'){
     $workout = [];
       $workout['workout_name'] = $_POST['workout_name'] ?? '';
       $workout['author'] = $_POST['author'] ?? '';
       $workout['metric_id'] = $_POST['metric_id'] ?? '';
+      $workout['rounds'] = $_POST['rounds'] ?? '';
       $workout['instructions'] = $_POST['instructions'] ?? '';
+      $workout['weight'] = $_POST['weight'] ?? '';
       $workout['stimulus'] = $_POST['stimulus'] ?? '';
       $workout['scales'] = $_POST['scales'] ?? '';
       $workout['workout_time'] = $_POST['workout_time'] ?? '';
@@ -20,37 +23,8 @@ if(is_post_request()){
       $workout['submit'] = $_POST['submit'] ?? '';
 
     $new_workout = insert_workout($workout);
-    $new_id = mysqli_insert_id($db);
-    $workout_steps = find_workout_steps_by_workout($new_id);
-
-    // $workout_steps = find_workout_steps_by_workout($new_id) ?? '';
-
-    print_r($workout);
-  // Create new workout_step
-  /* If it IS a post request but the form submission is NOT the new workout form, it is the workout steps
-     form.  It will create a new workout step */
-      # create new_id variable from ID saved in hidden form field in exercise_steps.php
-      # search for the workout that was just submitted
-      # create workwout step array
-      # create new workout step
-      # search for workout steps, used in exercise step table
-    } else {
-
-      $new_id = $_POST['workout_id'];
-      $workout = find_workout_by_id($new_id);
-
-      $workout_step=[];
-        $workout_step['workout_id'] = $_POST['workout_id'] ?? '';
-        $workout_step['step_order'] = $_POST['step_order'] ?? '';
-        $workout_step['exercise_id'] = $_POST['exercise_id'] ?? '';
-        if ($_POST['reps'] > 0) {
-          $workout_step['reps'] = $_POST['reps'];
-        } else {
-          $workout_step['reps'] = "0";
-        }
-
-      insert_workout_steps($workout_step);
-      $workout_steps = find_workout_steps_by_workout($new_id);
+    $id = mysqli_insert_id($db);
+    redirect_to(url_for('/staff/workouts/edit.php?id=' . h(u($id))));
 
     }
 // GET Request
@@ -65,11 +39,13 @@ if(is_post_request()){
       $workout['instructions'] = '';
       $workout['stimulus'] = '';
       $workout['scales'] = '';
+      $workout['weight'] = '';
       $workout['workout_time'] = '';
       $workout['workout_type_id'] = '';
       $workout['submit'] = '';
+      $workout['rounds'] = '';
 
-    $workout_steps = [];
+      $workout_steps = [];
 
   }
 ?>
@@ -82,10 +58,7 @@ if(is_post_request()){
 <div class="workout new">
   <h1>New Workout</h1>
   <!-- Create workout table -->
-  <table>
-  <tr>
-    <td width="460">
-      <form action="<?= url_for('/staff/workouts/new.php'); ?>" method="post">
+        <form action="<?= url_for('/staff/workouts/new.php'); ?>" method="post">
         <dl>
           <dt>Workout Name</dt>
           <dd><input type="text" name="workout_name" value="<?= h($workout['workout_name']) ?>" /></dd>
@@ -134,12 +107,20 @@ if(is_post_request()){
           </select></dd>
         </dl>
         <dl>
+          <dt>Rounds</dt>
+          <dd><input type="text" name="rounds" value="<?= h($workout['rounds']) ?>" /></dd>
+        </dl>
+        <dl>
           <dt>Time</dt>
           <dd><input type="text" name="workout_time" value="<?=h($workout['workout_time']) ?>" /></dd>
         </dl>
         <dl>
           <dt>Instruction</dt>
           <dd><textarea name="instructions" id="comments" cols="30" rows="10"><?= h($workout['instructions']); ?></textarea></dd>
+        </dl>
+        <dl>
+          <dt>Weight</dt>
+          <dd><textarea name="weight" id="comments" cols="30" rows="10"><?= h($workout['weight']); ?></textarea></dd>
         </dl>
         <dl>
           <dt>Stimulus</dt>
@@ -153,66 +134,6 @@ if(is_post_request()){
           <input type="submit" name="submit" value="workout" /></form>
         </div>
       </form>
-    </td>
-    <td alight="left" valign="top" width="460">
-      <!-- If post request has been submitted, from either form, exercise_step.php is included -->
-      <?php
-      if (is_post_request()): ?>
-      <!-- Exercise Steps Table -->
-      <table border="0" align="left" valign="top" class="list">
-        <tr>
-          <!-- Header -->
-          <th colspan="4">Exercises</th>
-        </tr>
-        <tr>
-          <th width="75">Order</th>
-          <th>Exercise</th>
-          <th>Reps</th>
-          <th>&nbsp;</th>
-        </tr>
-
-        <!-- New Exercise steps form -->
-        <tr><form action="<?= url_for('/staff/workouts/new.php'); ?>" method="post">
-          <td><input type="text" size="5" name="step_order" value="" /></td>
-          <td>
-            <select name="exercise_id" />
-            <?php
-            $exercises_set = find_all_exercises();
-            while($exercise = mysqli_fetch_assoc($exercises_set)){
-              echo "<option value=\"" . h($exercise['id']) . "\"";
-              echo ">" . h($exercise['exercise_name']) . "</option>";
-            }
-            mysqli_free_result($exercises_set);
-             ?>
-           </td>
-            <td><input type="text" size="8" name="reps" value=""  /></td>
-            <td>
-              <input type="hidden" name="workout_id" value="<?php
-                echo $new_id;
-              ?>">
-              <input type="submit" name="submit" value="Add" /></form>
-            </td>
-          </form>
-        </tr>
-
-        <!-- exercise steps loop generating table -->
-        <?php
-          while($workout_step = mysqli_fetch_assoc($workout_steps)){
-            $exerciseName = find_exercise_by_id($workout_step['exercise_id']);
-            echo "<tr>";
-            echo "<td>{$workout_step['step_order']}</td>";
-            echo "<td>{$exerciseName['exercise_name']}</td>";
-            echo "<td>{$workout_step['reps']}</td>";
-            echo "<td>" . "delete" . "</td>";
-            echo "</tr>";
-          }
-         ?>
-      </table>
-    <?php endif;?>
-
-    </td>
-  </tr>
-</table>
 </div>
 </div>
 <?php include(SHARED_PATH . '/staff_footer.php');?>

@@ -13,7 +13,7 @@ $workoutSteps_set = find_workout_steps_by_workout($id);
       <a class="back-link" href="<?= url_for('/staff/workouts/index.php');?>">&laquo;Back to List</a>
       <table>
         <tr>
-          <td width="460">
+          <td width="460" align="left" valign="top">
             <div class="view workout">
             <h1><?= h($workout['workout_name']); ?></h1>
             <div class="attributes">
@@ -27,16 +27,24 @@ $workoutSteps_set = find_workout_steps_by_workout($id);
               </dl>
               <dl>
                 <dt>Metric</dt>
-                <dd><?= h($metric['metric']); ?></dd>
+                <dd><?php if (!$workout['metric_id'] == 6): ?>
+                  <?php echo h($metric['metric']);
+                  else :
+                    echo $workout['rounds'] . ' ' . $metric['metric'];
+                  ?>
+                <?php endif; ?></dd>
               </dl>
               <dl>
                 <dt>Time</dt>
                 <dd><?= h($workout['workout_time']); ?></dd>
               </dl>
-
               <dl>
                 <dt>Instructions</dt>
                 <dd><?= h($workout['instructions']); ?></dd>
+              </dl>
+              <dl>
+                <dt>Weight</dt>
+                <dd><?= h($workout['weight']); ?></dd>
               </dl>
               <dl>
                 <dt>Stimulus</dt>
@@ -50,41 +58,42 @@ $workoutSteps_set = find_workout_steps_by_workout($id);
           </td>
 
           <td width="460" alight="left" valign="top">
-            <table border="0" align="left" valign="top" class="list">
+            <?php
+              $mod_set = find_workout_mod_by_workout($id);
+              while ($mod = mysqli_fetch_assoc($mod_set)) :
+            ?>
+            <!-- Exercise Steps Table -->
+            <table border="2" align="left" valign="top" class="list">
               <tr>
-                <th colspan="3">Exercises</th>
+                <!-- Header -->
+                <th colspan="4">
+                  <?php
+                    $mod_type = find_mod_type_by_id($mod['mod_type_id']);
+                    echo $mod_type['mod_type'];
+                  ?>
+                </th>
               </tr>
               <tr>
                 <th width="75">Order</th>
-                <th width="75">Reps</th>
                 <th>Exercise</th>
+                <th>Reps</th>
               </tr>
+              <!-- exercise steps loop generating table -->
               <?php
-              while ($workoutSteps = mysqli_fetch_assoc($workoutSteps_set)) :
-              $exerciseName = find_exercise_by_id($workoutSteps['exercise_id']);?>
-                <tr>
-                  <td><?= h($workoutSteps['step_order']); ?></td>
-                  <td><?= h($workoutSteps['reps']); ?></td>
-                  <td>
-                  <?php
-                  if(isset($exerciseName['vidLink'])) :?>
-                    <a href="<?= url_for('/staff/exercises/view.php?id=' . h(u($exerciseName['id'])));?>"><?= h($exerciseName['exercise_name']); ?>
-                    </a>
-                  <?php
-                  elseif(!isset($exerciseName['vidLink'])) :
-                    echo h($exerciseName['exercise_name']);
-                  endif;
-                  ?>
-                  </td>
-                </tr>
-              <?php endwhile; ?>
-            </table>
-            <?php mysqli_free_result($workoutSteps_set); ?>
+              $workout_steps = find_workout_steps_by_mod($mod['id']);
+                while($workout_step = mysqli_fetch_assoc($workout_steps)){
+                  $exerciseName = find_exercise_by_id($workout_step['exercise_id']);
+                  echo "<tr>";
+                  echo "<td>{$workout_step['step_order']}</td>";
+                  echo "<td>{$exerciseName['exercise_name']}</td>";
+                  echo "<td>{$workout_step['reps']}</td>";
+                  echo "</tr>";
+                }
+               ?>
+            </table>&nbsp;<?php endwhile; ?>
           </td>
-
         </tr>
       </table>
-
       </div>
      </div>
 <?php include(SHARED_PATH . '/staff_footer.php');?>

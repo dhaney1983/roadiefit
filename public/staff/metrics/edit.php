@@ -25,6 +25,7 @@ if(is_post_request()) {
 ?>
 
 <?php $page_title = 'Edit Metric'; ?>
+
 <?php include(SHARED_PATH . '/staff_header.php'); ?>
 
 <div id="content">
@@ -34,18 +35,18 @@ if(is_post_request()) {
   <div class="page edit">
     <h1>Edit Metric</h1>
 
-    <form action="<?= url_for('/staff/workout_types/edit.php'); ?>" method="post">
+    <form action="<?= url_for('/staff/metrics/edit.php?id=' . h(u($id))); ?>" method="post">
       <dl>
         <dt>Name</dt>
-        <dd><input type="text" name="workout_type" value="" /></dd>
+        <dd><input type="text" name="metric" value="<?= h($metric['metric']); ?>" /></dd>
       </dl>
       <dl>
         <dt>Description</dt>
-        <dd><input type="text" name="description" value="" /></dd>
+        <dd><input type="text" name="description" value="<?= h($metric['description']); ?>" /></dd>
       </dl>
 
       <div id="operations">
-        <input type="submit" value="Edit New Workout Type" />
+        <input type="submit" value="Edit Metric" />
       </div>
     </form>
 

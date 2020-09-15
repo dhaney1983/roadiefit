@@ -3,6 +3,7 @@
   function find_all_exercise_categories() {
     global $db;
     $sql = "SELECT * FROM exercise_categories ";
+    $sql .= "ORDER BY exercise_category ASC";
     $result = mysqli_query($db, $sql);
     confirm_result_set($result);
     return $result;
@@ -71,7 +72,7 @@
   function find_all_exercises() {
     global $db;
     $sql = "SELECT * FROM exercises ";
-    $sql .= "ORDER BY category, exercise_name ASC";
+    $sql .= "ORDER BY category_id, exercise_name ASC";
     $result = mysqli_query($db, $sql);
     confirm_result_set($result);
     return $result;
@@ -211,6 +212,77 @@
       exit;
     }
   }
+
+// Mod Type Functions
+
+function find_all_mod_types(){
+  global $db;
+  $sql = "SELECT * FROM mod_types ";
+  $sql .= "ORDER BY mod_type ASC";
+  $result = mysqli_query($db, $sql);
+  confirm_result_set($result);
+  return $result;
+}
+
+function find_mod_type_by_id($id) {
+  global $db;
+  $sql = "SELECT * FROM mod_types ";
+  $sql .= "WHERE id='" . $id . "'";
+  $result = mysqli_query($db, $sql);
+  $mod_type = mysqli_fetch_assoc($result);
+  mysqli_free_result($result);
+  return $mod_type;
+}
+
+function update_mod_type($mod_type){
+  global $db;
+  $sql = "UPDATE mod_types SET ";
+  $sql .= "mod_type='" . addslashes($mod_type['mod_type']) . "', ";
+  $sql .= "description='" . addslashes($mod_type['description']) . "' ";
+  $sql .= "WHERE id='". $mod_type['id'] . "' ";
+  $sql .= "LIMIT 1";
+  $result = mysqli_query($db, $sql);
+  if($result) {
+    return true;
+  } else {
+  echo mysqli_error($db);
+  db_disconnect($db);
+  // echo $sql;
+  exit;
+  }
+}
+
+function delete_mod_type($id){
+  global $db;
+  $sql = "DELETE FROM mod_types ";
+  $sql .= "WHERE id='" . $id . "' ";
+  $sql .= "LIMIT 1";
+  $result = mysqli_query($db, $sql);
+  if ($result) {
+    return true;
+  } else {
+    echo mysqli_error($db);
+    db_disconnect($db);
+    exit;
+  }
+}
+
+function insert_mod_type($mod_type) {
+  global $db;
+  $sql = "INSERT INTO mod_types ";
+  $sql .= "(mod_type, description) VALUES (";
+  $sql .= "'" . addslashes($mod_type['mod_type']) . "', ";
+  $sql .= "'" . addslashes($mod_type['description']) . "'";
+  $sql .= ")";
+  $result = mysqli_query($db, $sql);
+  if ($result) {
+    return true;
+  } else {
+  echo mysqli_error($db);
+  db_disconnect($db);
+  exit;
+  }
+}
 
 // Page functions
   function find_all_pages() {
@@ -368,14 +440,16 @@
 
   function insert_workout($workout){
     global $db;
-    $sql = "INSERT INTO workouts (workout_name, author, metric_id, instructions, stimulus, scales, workout_time, workout_type_id) ";
+    $sql = "INSERT INTO workouts (workout_name, author, metric_id, instructions, weight, stimulus, scales, rounds, workout_time, workout_type_id) ";
     $sql .= "VALUES (";
     $sql .= "'" . addslashes($workout['workout_name']) . "',";
     $sql .= "'" . addslashes($workout['author']) . "',";
     $sql .= "'" .$workout['metric_id'] . "',";
     $sql .= "'" . addslashes($workout['instructions']) . "',";
+    $sql .= "'" . addslashes($workout['weight']) . "',";
     $sql .= "'" . addslashes($workout['stimulus']) . "',";
     $sql .= "'" . addslashes($workout['scales']) . "',";
+    $sql .= "'" . addslashes($workout['rounds']) . "',";
     $sql .= "'" . $workout['workout_time'] . "',";
     $sql .= "'" . $workout['workout_type_id'] . "'";
     $sql .= ")";
@@ -406,9 +480,11 @@
     $sql .= "author='" . addslashes($workout['author']) . "',";
     $sql .= "metric_id='" . $workout['metric_id'] . "',";
     $sql .= "instructions='" . addslashes($workout['instructions']) . "',";
+    $sql .= "weight='" . addslashes($workout['weight']) . "',";
     $sql .= "stimulus='" . addslashes($workout['stimulus']) . "',";
     $sql .= "scales='" . addslashes($workout['scales']) . "',";
     $sql .= "workout_time='" . $workout['workout_time'] . "',";
+    $sql .= "rounds='" . $workout['rounds'] . "',";
     $sql .= "workout_type_id='" . $workout['workout_type_id'] . "' ";
     $sql .= "WHERE id='" . $workout['id'] . "' ";
     $sql .= "LIMIT 1";
@@ -428,7 +504,6 @@
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if ($result) {
-      delete_related_workout_steps($id);
       return true;
     } else {
     echo mysqli_error($db);
@@ -437,7 +512,90 @@
     }
   }
 
+  // Workout Mod Functions
+
+  function insert_mod($mod){
+    global $db;
+    $sql = "INSERT INTO mods ";
+    $sql .= "(mod_order, mod_type_id, workout_id, description) VALUES ( ";
+    $sql .= "'" . $mod['mod_order'] . "', ";
+    $sql .= "'" . $mod['mod_type_id'] . "', ";
+    $sql .= "'" . $mod['workout_id'] . "' , ";
+    $sql .= "'" . addslashes($mod['description']) . "'";
+    $sql .= ")";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      return true;
+    } else {
+    echo mysqli_error($db);
+    db_disconnect($db);
+    exit;
+    }
+  }
+
+  function update_mod($mod){
+    global $db;
+    $sql = "UPDATE mods SET ";
+    $sql .= "description='" . addslashes($mod['description']) . "' ";
+    $sql .= "WHERE id='" . $mod['id'] . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if($result){
+      return true;
+    }
+    echo mysqli_error($db);
+    db_disconnect($db);
+    exit;
+  }
+
+  function find_mod_by_id ($id){
+      global $db;
+      $sql = "SELECT * FROM mods ";
+      $sql .= "WHERE id='" . $id . "' ";
+      $result = mysqli_query($db, $sql);
+      $mod = mysqli_fetch_assoc($result);
+      mysqli_free_result($result);
+      return $mod;
+
+    }
+
+    function delete_mod($id){
+      global $db;
+      $sql = "DELETE FROM mods ";
+      $sql .= "WHERE id='" . $id . "' ";
+      $sql .= "LIMIT 1";
+      $result = mysqli_query($db, $sql);
+      if ($result) {
+        return true;
+      } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+      }
+    }
+
+  function find_workout_mod_by_workout ($workout_id){
+      global $db;
+      $sql = "SELECT * FROM mods ";
+      $sql .= "WHERE workout_id='" . $workout_id . "' ";
+      $sql .= "ORDER BY mod_order ASC";
+      $result = mysqli_query($db, $sql);
+      return $result;
+      mysqli_free_result($result);
+    }
+
   // Workout Step functions
+  function find_workout_step_by_id($id) {
+    global $db;
+    $sql = "SELECT * FROM workout_steps  ";
+    $sql .= "WHERE id='" . $id . "'";
+    $result = mysqli_query($db, $sql);
+    $workout_step = mysqli_fetch_assoc($result);
+    mysqli_free_result($result);
+    return $workout_step;
+  }
+
+
   function find_all_workout_steps() {
     global $db;
     $sql = "SELECT * FROM workout_steps ";
@@ -446,6 +604,8 @@
     confirm_result_set($result);
     return $result;
   }
+
+
 
   function find_workout_steps_by_workout ($workout_id){
       global $db;
@@ -457,13 +617,23 @@
       mysqli_free_result($result);
     }
 
+  function find_workout_steps_by_mod ($mod_id){
+      global $db;
+      $sql = "SELECT * FROM workout_steps ";
+      $sql .= "WHERE mod_id='" . $mod_id . "' ";
+      $sql .= "ORDER BY step_order ASC";
+      $result = mysqli_query($db, $sql);
+      return $result;
+      mysqli_free_result($result);
+    }
+
   function insert_workout_steps($workout_step) {
     global $db;
     $sql = "INSERT INTO workout_steps ";
-    $sql .= "(step_order, exercise_id, workout_id, reps) VALUES (";
+    $sql .= "(step_order, exercise_id, mod_id, reps) VALUES (";
     $sql .= "'" . $workout_step['step_order'] . "', ";
     $sql .= "'" . $workout_step['exercise_id'] . "', ";
-    $sql .= "'" . $workout_step['workout_id'] . "', ";
+    $sql .= "'" . $workout_step['mod_id'] . "', ";
     $sql .= "'" . $workout_step['reps'] . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
@@ -489,6 +659,22 @@
       exit;
     }
   }
+
+  function delete_workout_step($id){
+    global $db;
+    $sql = "DELETE FROM workout_steps ";
+    $sql .= "WHERE id='" . $id . "'";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
+  }
+
 
   // Workout Type Functions
   function find_all_workout_types() {

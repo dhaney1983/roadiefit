@@ -2,6 +2,20 @@
 
 require_once('../../../private/initialize.php');
 
+if(is_post_request()) {
+
+  $exercise = [];
+  $exercise['exercise_name'] = $_POST['exercise_name'];
+  $exercise['category_id'] = $_POST['category_id'];
+  $exercise['vidLink'] = $_POST['vidLink'];
+  $exercise['instruction'] = $_POST['instruction'];
+
+  $result = insert_exercise($exercise);
+  $new_id = mysqli_insert_id($db);
+  redirect_to(url_for('/staff/exercises/view.php?id=' . $new_id));
+
+}
+
 ?>
 <?php $page_title = 'Create Exercise'; ?>
 <?php include(SHARED_PATH . '/staff_header.php');?>
@@ -10,7 +24,7 @@ require_once('../../../private/initialize.php');
 <a class="back-link" href="<?= url_for('/staff/exercises/index.php');?>">&laquo; Back to List</a>
   <div class="exercise new">
     <h1>Create Exercise</h1>
-    <form action="<?= url_for('/staff/exercises/create.php');?>" method="post">
+    <form action="<?= url_for('/staff/exercises/new.php');?>" method="post">
       <dl>
         <dt>Exercise Name</dt>
         <dd><input type="text" name="exercise_name" value""></dd>
@@ -19,9 +33,9 @@ require_once('../../../private/initialize.php');
       <dl>
         <dt>Category</dt>
         <dd><select name="category_id">
+          <option value="">
           <?php
             $catagories_set = find_all_exercise_categories();
-
             while ($category = mysqli_fetch_assoc($catagories_set)) {
               echo "<option value=\"" . h($category['id']) . "\">" . $category['exercise_category'] . "</option>";
             }?>

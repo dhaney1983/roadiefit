@@ -1,6 +1,12 @@
 <?php require_once('../../../private/initialize.php');
 
 if(is_post_request()) {
+  $exercise_category = [];
+  $exercise_category['exercise_category'] = $_POST['exercise_category'];
+  $exercise_category['description'] = $_POST['description'];
+  $result = insert_exercise_category($exercise_category);
+  $new_id = mysqli_insert_id($db);
+  redirect_to(url_for('/staff/exercise_categories/view.php?id=' . $new_id));
 
 }
 
@@ -13,7 +19,7 @@ if(is_post_request()) {
 <div class="workout type new">
   <h1>Create Exercise Category</h1>
 
-  <form action="<?= url_for('/staff/exercise_categories/create.php'); ?>" method="post">
+  <form action="<?= url_for('/staff/exercise_categories/new.php'); ?>" method="post">
     <dl>
       <dt>Name</dt>
       <dd><input type="text" name="exercise_category" value="" /></dd>
