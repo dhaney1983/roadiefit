@@ -2,24 +2,21 @@
 
 require_once('../../../private/initialize.php');
 
-$menu_name = '';
-$position = '';
-$visible = '';
-
 if(is_post_request()) {
-
-  // Handle form values sent by new.php
-
-  $menu_name = $_POST['menu_name'] ?? '';
-  $position = $_POST['position'] ?? '';
-  $visible = $_POST['visible'] ?? '';
-
-  echo "Form parameters<br />";
-  echo "Menu name: " . $menu_name . "<br />";
-  echo "Position: " . $position . "<br />";
-  echo "Visible: " . $visible . "<br />";
+  $page = [];
+  $page['subject_id'] = $_POST['subject_id'] ?? '';
+  $page['menu_name'] = $_POST['menu_name'] ?? '';
+  $page['position'] = $_POST['position'] ?? '';
+  $page['visible'] = $_POST['visible'] ?? '';
+  $page['content'] = $_POST['content'] ?? '';
+  $result = insert_page($page);
+  $new_id = mysqli_insert_id($db);
+  redirect_to(url_for('/staff/pages/view.php?id=' . $new_id));
+} else {
+  $page_set = find_all_pages();
+  $page_count = mysqli_num_rows($page_set) +1;
+  mysqli_free_result($page_set);
 }
-
 ?>
 
 <?php $page_title = 'Create Page'; ?>
@@ -32,16 +29,37 @@ if(is_post_request()) {
   <div class="page new">
     <h1>Create Page</h1>
 
-    <form action="<?php echo url_for('/staff/pages/new.php'); ?>" method="post">
+    <form action="<?php echo url_for('/staff/pages/create.php'); ?>" method="post">
       <dl>
         <dt>Menu Name</dt>
-        <dd><input type="text" name="menu_name" value="<?php echo h($menu_name); ?>" /></dd>
+        <dd><input type="text" name="menu_name" value="" /></dd>
+      </dl>
+      <dl>
+        <dt>Subject</dt>
+        <dd>
+          <select name="subject_id">
+            <?php
+            $subjects_set = find_all_subjects();
+            while ($subject = mysqli_fetch_assoc($subjects_set)) {
+              echo "<option value=\"" . h($subject['id']) . "\"";
+                echo ">" . h($subject['menu_name']) . "</option>";
+            }
+            mysqli_free_result($subjects_set);?>
+
+            </option>
+          </select>
+        </dd>
       </dl>
       <dl>
         <dt>Position</dt>
         <dd>
           <select name="position">
-            <option value="1"<?php if($position == "1") { echo " selected"; } ?>>1</option>
+            <?php
+              for ($i=1; $i <= $page_count ; $i++) {
+              echo "<option value=\"{$i}\">{$i}</option>";
+
+              }
+            ?>
           </select>
         </dd>
       </dl>
@@ -49,7 +67,13 @@ if(is_post_request()) {
         <dt>Visible</dt>
         <dd>
           <input type="hidden" name="visible" value="0" />
-          <input type="checkbox" name="visible" value="1"<?php if($visible == "1") { echo " checked"; } ?> />
+          <input type="checkbox" name="visible" value="1" />
+        </dd>
+      </dl>
+      <dl>
+        <dt>Content</dt>
+        <dd>
+          <textarea name="content" cols="60" rows="10"></textarea>
         </dd>
       </dl>
       <div id="operations">

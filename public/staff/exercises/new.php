@@ -1,22 +1,30 @@
-<?php require_once('../../../private/initialize.php');
+<?php
 
-$test = $_GET['test'] ?? '';
-if($test == '404') {
-  error404();
-} elseif($test == '500'){
-  error500();
-}elseif($test == 'redirect') {
-  redirect_to(url_for('/staff/exercises/index.php'));
+require_once('../../../private/initialize.php');
+
+if(is_post_request()) {
+
+  $exercise = [];
+  $exercise['exercise_name'] = $_POST['exercise_name'];
+  $exercise['category_id'] = $_POST['category_id'];
+  $exercise['vidLink'] = $_POST['vidLink'];
+  $exercise['instruction'] = $_POST['instruction'];
+
+  $result = insert_exercise($exercise);
+  $new_id = mysqli_insert_id($db);
+  redirect_to(url_for('/staff/exercises/view.php?id=' . $new_id));
+
 }
 
 ?>
+<?php $page_title = 'Create Exercise'; ?>
 <?php include(SHARED_PATH . '/staff_header.php');?>
 
 <div id="content">
 <a class="back-link" href="<?= url_for('/staff/exercises/index.php');?>">&laquo; Back to List</a>
   <div class="exercise new">
     <h1>Create Exercise</h1>
-    <form action="<?= url_for('/staff/exercises/create.php');?>" method="post">
+    <form action="<?= url_for('/staff/exercises/new.php');?>" method="post">
       <dl>
         <dt>Exercise Name</dt>
         <dd><input type="text" name="exercise_name" value""></dd>
@@ -24,7 +32,16 @@ if($test == '404') {
 
       <dl>
         <dt>Category</dt>
-        <dd><input type="text" name="category" value""></dd>
+        <dd><select name="category_id">
+          <option value="">
+          <?php
+            $catagories_set = find_all_exercise_categories();
+            while ($category = mysqli_fetch_assoc($catagories_set)) {
+              echo "<option value=\"" . h($category['id']) . "\">" . $category['exercise_category'] . "</option>";
+            }?>
+        </select>
+        <?php mysqli_free_result($catagories_set);?>
+      </dd>
       </dl>
 
       <dl>
@@ -34,7 +51,7 @@ if($test == '404') {
 
       <dl>
         <dt>Instructions</dt>
-        <dd><textarea name="instructions" id="comments" cols="30" rows="20"></textarea></dd>
+        <dd><textarea name="instruction" id="comments" cols="30" rows="20"></textarea></dd>
       </dl>
       <div id="operations">
         <input type="submit" value="Submit New Exercise" />
