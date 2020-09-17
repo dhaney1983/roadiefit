@@ -29,7 +29,7 @@ include(SHARED_PATH . '/staff_header.php');
       </dl>
       <dl>
         <dt>Visible</dt>
-        <dd><?= $subject['visible'];?></dd>
+        <dd><?php echo $subject['visible'] == '1' ? 'true' : 'false'; ?></dd>
       </dl>
     </div>
 

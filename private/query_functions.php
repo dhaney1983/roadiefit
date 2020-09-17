@@ -12,7 +12,7 @@
   function find_exercise_category_by_id($id) {
     global $db;
     $sql = "SELECT * FROM exercise_categories ";
-    $sql .= "WHERE id='" . $id . "'";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "'";
     $result = mysqli_query($db, $sql);
     confirm_result_set($result);
     $exercise_category = mysqli_fetch_assoc($result);
@@ -28,8 +28,8 @@
     }
     $sql = "INSERT INTO exercise_categories (exercise_category, description) ";
     $sql .= "VALUES (";
-    $sql .= "'" . addslashes($exercise_category['exercise_category']) . "', ";
-    $sql .= "'" . addslashes($exercise_category['description']) . "'";
+    $sql .= "'" . db_escape($db, $exercise_category['exercise_category']) . "', ";
+    $sql .= "'" . db_escape($db, $exercise_category['description']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -48,9 +48,9 @@
       return $errors;
     }
     $sql = "UPDATE exercise_categories SET ";
-    $sql .= "exercise_category='" . addslashes($exercise_category['exercise_category']) . "', ";
-    $sql .= "description='" . addslashes($exercise_category['description']) . "' ";
-    $sql .= "WHERE id='" . $exercise_category['id'] . "'";
+    $sql .= "exercise_category='" . db_escape($db, $exercise_category['exercise_category']) . "', ";
+    $sql .= "description='" . db_escape($db, $exercise_category['description']) . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $exercise_category['id']) . "'";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if($result) {
@@ -65,7 +65,7 @@
   function delete_exercise_categories($id){
     global $db;
     $sql = "DELETE FROM exercise_categories ";
-    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -107,7 +107,7 @@
   function find_exercise_by_id($id) {
     global $db;
     $sql = "SELECT * FROM exercises ";
-    $sql .= "WHERE id='" . $id . "'";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "'";
     $result = mysqli_query($db, $sql);
     confirm_result_set($result);
     $exercise = mysqli_fetch_assoc($result);
@@ -124,10 +124,10 @@
     $sql = "INSERT INTO exercises ";
     $sql .= "(exercise_name, category_id, vidLink, instruction) ";
     $sql .= "VALUES (";
-    $sql .= "'" . addslashes($exercise['exercise_name']) . "',";
-    $sql .= "'" . $exercise['category_id'] . "',";
-    $sql .= "'" . $exercise['vidLink'] . "',";
-    $sql .= "'" . addslashes($exercise['instruction']) . "'";
+    $sql .= "'" . db_escape($db, $exercise['exercise_name']) . "',";
+    $sql .= "'" . db_escape($db, $exercise['category_id']) . "',";
+    $sql .= "'" . db_escape($db, $exercise['vidLink']) . "',";
+    $sql .= "'" . db_escape($db, $exercise['instruction']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if($result) {
@@ -146,11 +146,11 @@
       return $errors;
     }
     $sql = "UPDATE exercises SET ";
-    $sql .= "exercise_name='" . addslashes($exercise['exercise_name']) . "', ";
-    $sql .= "category_id='" . $exercise['category_id'] . "', ";
-    $sql .= "vidLink='" . $exercise['vidLink'] . "', ";
-    $sql .= "instruction='" . addslashes($exercise['instruction']) . "' ";
-    $sql .= "WHERE id='" . $exercise['id'] . "' ";
+    $sql .= "exercise_name='" . db_escape($db, $exercise['exercise_name']) . "', ";
+    $sql .= "category_id='" . db_escape($db, $exercise['category_id']) . "', ";
+    $sql .= "vidLink='" . db_escape($db, $exercise['vidLink']) . "', ";
+    $sql .= "instruction='" . db_escape($db, $exercise['instruction']) . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $exercise['id']) . "' ";
     $sql .= "LIMIT 1";
     // echo $sql;
     $result = mysqli_query($db, $sql);
@@ -166,7 +166,7 @@
   function delete_exercise($id) {
     global $db;
     $sql = "DELETE FROM exercises ";
-    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -215,7 +215,7 @@
   function find_metric_by_id($id) {
     global $db;
     $sql = "SELECT * FROM metrics ";
-    $sql .= "WHERE id='" . $id . "'";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "'";
     $result = mysqli_query($db, $sql);
     $metric = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
@@ -230,8 +230,8 @@
     }
     $sql = "INSERT INTO metrics ";
     $sql .= "(metric, description) VALUES (";
-    $sql .= "'" . addslashes($metric['metric']) . "', ";
-    $sql .= "'" . addslashes($metric['description']) . "'";
+    $sql .= "'" . db_escape($db, $metric['metric']) . "', ";
+    $sql .= "'" . db_escape($db, $metric['description']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -250,9 +250,9 @@
       return $errors;
     }
     $sql = "UPDATE metrics SET ";
-    $sql .= "metric='" . addslashes($metric['metric']) . "', ";
-    $sql .= "description='" . addslashes($metric['description']) . "' ";
-    $sql .= "WHERE id='". $metric['id'] . "' ";
+    $sql .= "metric='" . db_escape($db, $metric['metric']) . "', ";
+    $sql .= "description='" . db_escape($db, $metric['description']) . "' ";
+    $sql .= "WHERE id='". db_escape($db, $metric['id']) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if($result) {
@@ -267,7 +267,7 @@
   function delete_metric($id){
     global $db;
     $sql = "DELETE FROM metrics ";
-    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -314,7 +314,7 @@
   function find_mod_type_by_id($id) {
     global $db;
     $sql = "SELECT * FROM mod_types ";
-    $sql .= "WHERE id='" . $id . "'";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "'";
     $result = mysqli_query($db, $sql);
     $mod_type = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
@@ -328,9 +328,9 @@
       return $errors;
     }
     $sql = "UPDATE mod_types SET ";
-    $sql .= "mod_type='" . addslashes($mod_type['mod_type']) . "', ";
-    $sql .= "description='" . addslashes($mod_type['description']) . "' ";
-    $sql .= "WHERE id='". $mod_type['id'] . "' ";
+    $sql .= "mod_type='" . db_escape($db, $mod_type['mod_type']) . "', ";
+    $sql .= "description='" . db_escape($db, $mod_type['description']) . "' ";
+    $sql .= "WHERE id='". db_escape($db, $mod_type['id']) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if($result) {
@@ -346,7 +346,7 @@
   function delete_mod_type($id){
     global $db;
     $sql = "DELETE FROM mod_types ";
-    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -366,8 +366,8 @@
     }
     $sql = "INSERT INTO mod_types ";
     $sql .= "(mod_type, description) VALUES (";
-    $sql .= "'" . addslashes($mod_type['mod_type']) . "', ";
-    $sql .= "'" . addslashes($mod_type['description']) . "'";
+    $sql .= "'" . db_escape($db, $mod_type['mod_type']) . "', ";
+    $sql .= "'" . db_escape($db, $mod_type['description']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -409,7 +409,7 @@
   function find_page_by_id($id) {
     global $db;
     $sql = "SELECT * FROM pages ";
-    $sql .= "WHERE id ='" . $id . "'";
+    $sql .= "WHERE id ='" . db_escape($db, $id) . "'";
     $result = mysqli_query($db, $sql);
     $page = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
@@ -424,11 +424,11 @@
     }
     $sql = "INSERT INTO pages ";
     $sql .= "(menu_name, subject_id, position, visible, content) Values (";
-    $sql .= "'" . addslashes($page['menu_name']) . "', ";
-    $sql .= "'" . $page['subject_id'] . "', ";
-    $sql .= "'" . $page['position'] . "', ";
-    $sql .= "'" . $page['visible'] . "', ";
-    $sql .= "'" . addslashes($page['content']) . "'";
+    $sql .= "'" . db_escape($db, $page['menu_name']) . "', ";
+    $sql .= "'" . db_escape($db, $page['subject_id']) . "', ";
+    $sql .= "'" . db_escape($db, $page['position']) . "', ";
+    $sql .= "'" . db_escape($db, $page['visible']) . "', ";
+    $sql .= "'" . db_escape($db, $page['content']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if($result){
@@ -447,12 +447,12 @@
       return $errors;
     }
     $sql = "UPDATE pages SET ";
-    $sql .= "menu_name='" . addslashes($page['menu_name']) . "', ";
-    $sql .= "position='" . $page['position'] . "', ";
-    $sql .= "visible='" . $page['visible'] . "', ";
-    $sql .= "content='" . addslashes($page['content']) . "', ";
-    $sql .= "subject_id='" . $page['subject_id'] . "' ";
-    $sql .= "WHERE id='" . $page['id'] . "'";
+    $sql .= "menu_name='" . db_escape($db, $page['menu_name']) . "', ";
+    $sql .= "position='" . db_escape($db, $page['position']) . "', ";
+    $sql .= "visible='" . db_escape($db, $page['visible']) . "', ";
+    $sql .= "content='" . db_escape($db, $page['content']) . "', ";
+    $sql .= "subject_id='" . db_escape($db, $page['subject_id']) . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $page['id']) . "'";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if($result) {
@@ -467,7 +467,7 @@
   function delete_page($id){
     global $db;
     $sql = "DELETE FROM pages ";
-    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if($result){
@@ -532,7 +532,7 @@
   function find_subject_by_id($id) {
     global $db;
     $sql = "SELECT * FROM subjects ";
-    $sql .= "WHERE id='" . $id . "'";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "'";
     $result = mysqli_query($db, $sql);
     $subject = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
@@ -547,9 +547,9 @@
     }
     $sql = "INSERT INTO subjects (menu_name, position, visible) ";
     $sql .= "VALUES (";
-    $sql .= "'" . addslashes($subject['menu_name']) . "',";
-    $sql .= "'" . $subject['position'] . "',";
-    $sql .= "'" . $subject['visible'] . "'";
+    $sql .= "'" . db_escape($db, $subject['menu_name']) . "',";
+    $sql .= "'" . db_escape($db, $subject['position']) . "',";
+    $sql .= "'" . db_escape($db, $subject['visible']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if($result) {
@@ -568,10 +568,10 @@
       return $errors;
     }
     $sql = "UPDATE subjects SET ";
-    $sql .= "menu_name='" . addslashes($subject['menu_name']) . "', ";
-    $sql .= "position='" . $subject['position']. "', ";
-    $sql .= "visible='" . $subject['visible'] . "' ";
-    $sql .= "WHERE id='" . $subject['id'] . "' ";
+    $sql .= "menu_name='" . db_escape($db, $subject['menu_name']) . "', ";
+    $sql .= "position='" . db_escape($db, $subject['position']) . "', ";
+    $sql .= "visible='" . db_escape($db, $subject['visible']) . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $subject['id']) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if($result){
@@ -586,7 +586,7 @@
   function delete_subject($id){
     global $db;
     $sql = "DELETE FROM subjects ";
-    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -646,7 +646,7 @@
   function find_workout_type_by_id($id) {
     global $db;
     $sql = "SELECT * FROM workout_types ";
-    $sql .= "WHERE id='" . $id . "'";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "'";
     $result = mysqli_query($db, $sql);
     $workout_type = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
@@ -661,8 +661,8 @@
     }
     $sql = "INSERT INTO workout_types ";
     $sql .= "(workout_type, description) VALUES (";
-    $sql .= "'" . addslashes($workout_type['workout_type']) . "', ";
-    $sql .= "'" . addslashes($workout_type['description']) . "'";
+    $sql .= "'" . db_escape($db, $workout_type['workout_type']) . "', ";
+    $sql .= "'" . db_escape($db, $workout_type['description']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -681,9 +681,9 @@
       return $errors;
     }
     $sql = "UPDATE workout_types SET ";
-    $sql .= "workout_type='" . addslashes($workout_type['workout_type']) . "', ";
-    $sql .= "description='" . addslashes($workout_type['description']) . "' ";
-    $sql .= "WHERE id='" . $workout_type['id'] . "' ";
+    $sql .= "workout_type='" . db_escape($db, $workout_type['workout_type']) . "', ";
+    $sql .= "description='" . db_escape($db, $workout_type['description']) . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $workout_type['id']) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if($result){
@@ -698,7 +698,7 @@
   function delete_workout_type($id){
     global $db;
     $sql = "DELETE FROM workout_types ";
-    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -745,16 +745,16 @@
     }
     $sql = "INSERT INTO workouts (workout_name, author, metric_id, instructions, weight, stimulus, scales, rounds, workout_time, workout_type_id) ";
     $sql .= "VALUES (";
-    $sql .= "'" . addslashes($workout['workout_name']) . "',";
-    $sql .= "'" . addslashes($workout['author']) . "',";
-    $sql .= "'" .$workout['metric_id'] . "',";
-    $sql .= "'" . addslashes($workout['instructions']) . "',";
-    $sql .= "'" . addslashes($workout['weight']) . "',";
-    $sql .= "'" . addslashes($workout['stimulus']) . "',";
-    $sql .= "'" . addslashes($workout['scales']) . "',";
-    $sql .= "'" . addslashes($workout['rounds']) . "',";
-    $sql .= "'" . $workout['workout_time'] . "',";
-    $sql .= "'" . $workout['workout_type_id'] . "'";
+    $sql .= "'" . db_escape($db, $workout['workout_name']) . "',";
+    $sql .= "'" . db_escape($db, $workout['author']) . "',";
+    $sql .= "'" . db_escape($db, $workout['metric_id']) . "',";
+    $sql .= "'" . db_escape($db, $workout['instructions']) . "',";
+    $sql .= "'" . db_escape($db, $workout['weight']) . "',";
+    $sql .= "'" . db_escape($db, $workout['stimulus']) . "',";
+    $sql .= "'" . db_escape($db, $workout['scales']) . "',";
+    $sql .= "'" . db_escape($db, $workout['rounds']) . "',";
+    $sql .= "'" . db_escape($db, $workout['workout_time']) . "',";
+    $sql .= "'" . db_escape($db, $workout['workout_type_id']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if($result){
@@ -769,7 +769,7 @@
   function find_workout_by_id($id) {
     global $db;
     $sql = "SELECT * FROM workouts ";
-    $sql .= "WHERE id='" . $id . "'";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "'";
     $result = mysqli_query($db, $sql);
     $subject = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
@@ -783,17 +783,17 @@
       return $errors;
     }
     $sql = "UPDATE workouts SET ";
-    $sql .= "workout_name='" . addslashes($workout['workout_name']) . "',";
-    $sql .= "author='" . addslashes($workout['author']) . "',";
-    $sql .= "metric_id='" . $workout['metric_id'] . "',";
-    $sql .= "instructions='" . addslashes($workout['instructions']) . "',";
-    $sql .= "weight='" . addslashes($workout['weight']) . "',";
-    $sql .= "stimulus='" . addslashes($workout['stimulus']) . "',";
-    $sql .= "scales='" . addslashes($workout['scales']) . "',";
-    $sql .= "workout_time='" . $workout['workout_time'] . "',";
-    $sql .= "rounds='" . $workout['rounds'] . "',";
-    $sql .= "workout_type_id='" . $workout['workout_type_id'] . "' ";
-    $sql .= "WHERE id='" . $workout['id'] . "' ";
+    $sql .= "workout_name='" . db_escape($db, $workout['workout_name']) . "',";
+    $sql .= "author='" . db_escape($db, $workout['author']) . "',";
+    $sql .= "metric_id='" . db_escape($db, $workout['metric_id']) . "',";
+    $sql .= "instructions='" . db_escape($db, $workout['instructions']) . "',";
+    $sql .= "weight='" . db_escape($db, $workout['weight']) . "',";
+    $sql .= "stimulus='" . db_escape($db, $workout['stimulus']) . "',";
+    $sql .= "scales='" . db_escape($db, $workout['scales']) . "',";
+    $sql .= "workout_time='" . db_escape($db, $workout['workout_time']) . "',";
+    $sql .= "rounds='" . db_escape($db, $workout['rounds']) . "',";
+    $sql .= "workout_type_id='" .db_escape($db, $workout['workout_type_id']) . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $workout['id']) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if($result){
@@ -807,7 +807,7 @@
   function delete_workout($id){
     global $db;
     $sql = "DELETE FROM workouts ";
-    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -852,10 +852,10 @@
     }
     $sql = "INSERT INTO mods ";
     $sql .= "(mod_order, mod_type_id, workout_id, description) VALUES ( ";
-    $sql .= "'" . $mod['mod_order'] . "', ";
-    $sql .= "'" . $mod['mod_type_id'] . "', ";
-    $sql .= "'" . $mod['workout_id'] . "' , ";
-    $sql .= "'" . addslashes($mod['description']) . "'";
+    $sql .= "'" . db_escape($db, $mod['mod_order']) . "', ";
+    $sql .= "'" . db_escape($db, $mod['mod_type_id']) . "', ";
+    $sql .= "'" . db_escape($db, $mod['workout_id']) . "' , ";
+    $sql .= "'" . db_escape($db, $mod['description']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -870,8 +870,8 @@
   function update_mod($mod){
     global $db;
     $sql = "UPDATE mods SET ";
-    $sql .= "description='" . addslashes($mod['description']) . "' ";
-    $sql .= "WHERE id='" . $mod['id'] . "' ";
+    $sql .= "description='" . db_escape($db, $mod['description']) . "' ";
+    $sql .= "WHERE id='" . db_escape($db, $mod['id']) . "' ";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if($result){
@@ -885,7 +885,7 @@
   function find_mod_by_id ($id){
       global $db;
       $sql = "SELECT * FROM mods ";
-      $sql .= "WHERE id='" . $id . "' ";
+      $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
       $result = mysqli_query($db, $sql);
       $mod = mysqli_fetch_assoc($result);
       mysqli_free_result($result);
@@ -896,7 +896,7 @@
     function delete_mod($id){
       global $db;
       $sql = "DELETE FROM mods ";
-      $sql .= "WHERE id='" . $id . "' ";
+      $sql .= "WHERE id='" . db_escape($db, $id) . "' ";
       $sql .= "LIMIT 1";
       $result = mysqli_query($db, $sql);
       if ($result) {
@@ -911,7 +911,7 @@
   function find_workout_mod_by_workout ($workout_id){
       global $db;
       $sql = "SELECT * FROM mods ";
-      $sql .= "WHERE workout_id='" . $workout_id . "' ";
+      $sql .= "WHERE workout_id='" . db_escape($db, $workout_id) . "' ";
       $sql .= "ORDER BY mod_order ASC";
       $result = mysqli_query($db, $sql);
       return $result;
@@ -934,7 +934,7 @@
   function find_workout_step_by_id($id) {
     global $db;
     $sql = "SELECT * FROM workout_steps  ";
-    $sql .= "WHERE id='" . $id . "'";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "'";
     $result = mysqli_query($db, $sql);
     $workout_step = mysqli_fetch_assoc($result);
     mysqli_free_result($result);
@@ -953,7 +953,7 @@
   function find_workout_steps_by_workout ($workout_id){
       global $db;
       $sql = "SELECT * FROM workout_steps ";
-      $sql .= "WHERE workout_id='" . $workout_id . "' ";
+      $sql .= "WHERE workout_id='" . db_escape($db, $workout_id) . "' ";
       $sql .= "ORDER BY step_order ASC";
       $result = mysqli_query($db, $sql);
       return $result;
@@ -963,7 +963,7 @@
   function find_workout_steps_by_mod ($mod_id){
       global $db;
       $sql = "SELECT * FROM workout_steps ";
-      $sql .= "WHERE mod_id='" . $mod_id . "' ";
+      $sql .= "WHERE mod_id='" . db_escape($db, $mod_id) . "' ";
       $sql .= "ORDER BY step_order ASC";
       $result = mysqli_query($db, $sql);
       return $result;
@@ -972,17 +972,16 @@
 
   function insert_workout_steps($workout_step) {
     global $db;
-    global $db;
     $errors = validate_workout_step($workout_step);
     if(!empty($errors)){
       return $errors;
     }
     $sql = "INSERT INTO workout_steps ";
     $sql .= "(step_order, exercise_id, mod_id, reps) VALUES (";
-    $sql .= "'" . $workout_step['step_order'] . "', ";
-    $sql .= "'" . $workout_step['exercise_id'] . "', ";
-    $sql .= "'" . $workout_step['mod_id'] . "', ";
-    $sql .= "'" . $workout_step['reps'] . "'";
+    $sql .= "'" . db_escape($db, $workout_step['step_order']) . "', ";
+    $sql .= "'" . db_escape($db, $workout_step['exercise_id']) . "', ";
+    $sql .= "'" . db_escape($db, $workout_step['mod_id']) . "', ";
+    $sql .= "'" . db_escape($db, $workout_step['reps']) . "'";
     $sql .= ")";
     $result = mysqli_query($db, $sql);
     if ($result) {
@@ -997,7 +996,7 @@
   function delete_workout_step($id){
     global $db;
     $sql = "DELETE FROM workout_steps ";
-    $sql .= "WHERE id='" . $id . "'";
+    $sql .= "WHERE id='" . db_escape($db, $id) . "'";
     $sql .= "LIMIT 1";
     $result = mysqli_query($db, $sql);
     if ($result) {
