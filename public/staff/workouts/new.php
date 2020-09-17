@@ -10,44 +10,42 @@
 if(is_post_request()){
   if($_POST['submit'] == 'workout'){
     $workout = [];
-      $workout['workout_name'] = $_POST['workout_name'] ?? '';
-      $workout['author'] = $_POST['author'] ?? '';
-      $workout['metric_id'] = $_POST['metric_id'] ?? '';
-      $workout['rounds'] = $_POST['rounds'] ?? '';
-      $workout['instructions'] = $_POST['instructions'] ?? '';
-      $workout['weight'] = $_POST['weight'] ?? '';
-      $workout['stimulus'] = $_POST['stimulus'] ?? '';
-      $workout['scales'] = $_POST['scales'] ?? '';
-      $workout['workout_time'] = $_POST['workout_time'] ?? '';
-      $workout['workout_type_id'] = $_POST['workout_type_id'] ?? '';
-      $workout['submit'] = $_POST['submit'] ?? '';
-
+    $workout['workout_name'] = $_POST['workout_name'] ?? '';
+    $workout['author'] = $_POST['author'] ?? '';
+    $workout['metric_id'] = $_POST['metric_id'] ?? '';
+    $workout['rounds'] = $_POST['rounds'] ?? '';
+    $workout['instructions'] = $_POST['instructions'] ?? '';
+    $workout['weight'] = $_POST['weight'] ?? '';
+    $workout['stimulus'] = $_POST['stimulus'] ?? '';
+    $workout['scales'] = $_POST['scales'] ?? '';
+    $workout['workout_time'] = $_POST['workout_time'] ?? '';
+    $workout['workout_type_id'] = $_POST['workout_type_id'] ?? '';
+    $workout['submit'] = $_POST['submit'] ?? '';
+    // print_r($workout);
+    // exit;
     $new_workout = insert_workout($workout);
-    $id = mysqli_insert_id($db);
-    redirect_to(url_for('/staff/workouts/edit.php?id=' . h(u($id))));
-
+    if ($new_workout === true) {
+      $id = mysqli_insert_id($db);
+      redirect_to(url_for('/staff/workouts/edit.php?id=' . h(u($id))));
+    } else {
+      $errors = $new_workout;
     }
-// GET Request
-  # Clear Workout array
-  # Clear workout sets array
-} else {
-
-    $workout = [];
-      $workout['workout_name'] = '';
-      $workout['author'] = '';
-      $workout['metric_id'] = '';
-      $workout['instructions'] = '';
-      $workout['stimulus'] = '';
-      $workout['scales'] = '';
-      $workout['weight'] = '';
-      $workout['workout_time'] = '';
-      $workout['workout_type_id'] = '';
-      $workout['submit'] = '';
-      $workout['rounds'] = '';
-
-      $workout_steps = [];
-
+    } else {
   }
+} else {
+  $workout = [];
+    $workout['workout_name'] = '';
+    $workout['author'] = '';
+    $workout['metric_id'] = '';
+    $workout['instructions'] = '';
+    $workout['stimulus'] = '';
+    $workout['scales'] = '';
+    $workout['weight'] = '';
+    $workout['workout_time'] = '';
+    $workout['workout_type_id'] = '';
+    $workout['submit'] = '';
+    $workout['rounds'] = '';
+}
 ?>
 
 <?php $page_title = 'Create Workout'; ?>
@@ -57,6 +55,7 @@ if(is_post_request()){
 <a class="back-link" href="<?= url_for('/staff/workouts/index.php');?>">&laquo; Back to List</a>
 <div class="workout new">
   <h1>New Workout</h1>
+  <?= display_errors($errors); ?>
   <!-- Create workout table -->
         <form action="<?= url_for('/staff/workouts/new.php'); ?>" method="post">
         <dl>
@@ -66,7 +65,7 @@ if(is_post_request()){
         <dl>
           <dt>Workout Type</dt>
           <dd><select name="workout_type_id">
-          <option value="0">&nbsp;</option>
+          <option value="">&nbsp;</option>
 
           <!-- Workout Type Menu -->
           <?php
@@ -82,7 +81,6 @@ if(is_post_request()){
 
           </select></dd>
         </dl>
-
         <dl>
           <dt>Author</dt>
           <dd><input type="text" name="author" value="<?= h($workout['author']) ;?>" /></dd>
@@ -103,7 +101,6 @@ if(is_post_request()){
                 echo ">{$metric['metric']}</option>";
               }
             ?>
-
           </select></dd>
         </dl>
         <dl>

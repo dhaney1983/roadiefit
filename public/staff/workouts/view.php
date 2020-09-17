@@ -1,7 +1,7 @@
 <?php require_once('../../../private/initialize.php');
 $id = $_GET['id'] ?? '1';
 $workout = find_workout_by_id($id);
-$metric = find_metric_by_id($workout['metric_id']);
+$metric = find_metric_by_id($workout['metric_id']) ?? '';
 $workout_type = find_workout_type_by_id($workout['workout_type_id']);
 $workoutSteps_set = find_workout_steps_by_workout($id);
  ?>
@@ -26,13 +26,16 @@ $workoutSteps_set = find_workout_steps_by_workout($id);
                 <dd><?= h($workout_type['workout_type']); ?></dd>
               </dl>
               <dl>
+                <?php if (!empty($metric)): ?>
                 <dt>Metric</dt>
-                <dd><?php if (!$workout['metric_id'] == 6): ?>
-                  <?php echo h($metric['metric']);
+                <dd><?php if ($workout['metric_id'] == 6): ?>
+                  <?php echo $workout['rounds'] . ' ' . $metric['metric'];
                   else :
-                    echo $workout['rounds'] . ' ' . $metric['metric'];
+                    echo h($metric['metric']);
                   ?>
                 <?php endif; ?></dd>
+
+              <?php endif; ?>
               </dl>
               <dl>
                 <dt>Time</dt>

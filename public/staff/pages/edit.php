@@ -13,14 +13,20 @@ if(is_post_request()) {
 
   // Handle form values sent by edit.php
   $page = [];
-    $page['menu_name'] = $_POST['menu_name'] ?? '';
-    $page['position'] = $_POST['position'] ?? '';
-    $page['visible'] = $_POST['visible'] ?? '';
-    $page['content'] = $_POST['content'] ?? '';
-    $page['subject_id'] = $_POST['subject_id'] ?? '';
-    $page['id'] = $id ?? '';
+  $page['menu_name'] = $_POST['menu_name'] ?? '';
+  $page['position'] = $_POST['position'] ?? '';
+  $page['visible'] = $_POST['visible'] ?? '';
+  $page['content'] = $_POST['content'] ?? '';
+  $page['subject_id'] = $_POST['subject_id'] ?? '';
+  $page['id'] = $id ?? '';
+
   $result = update_page($page);
-  redirect_to(url_for('/staff/pages/view.php?id=' .h(u($id))));
+  if($result === true){
+    redirect_to(url_for('/staff/pages/view.php?id=' .h(u($id))));
+  } else {
+    $errors = $result;
+    // var_dump($errors);
+  }
 
 } else {
   $page = find_page_by_id($id);
@@ -41,7 +47,7 @@ mysqli_free_result($page_set);
 
   <div class="page edit">
     <h1>Edit Page</h1>
-
+    <?= display_errors($errors); ?>
     <form action="<?= url_for('/staff/pages/edit.php?id=' . h(u($id))); ?>" method="post">
       <dl>
         <dt>Menu Name</dt>

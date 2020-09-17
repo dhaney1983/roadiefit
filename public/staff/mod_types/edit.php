@@ -17,12 +17,14 @@ if(is_post_request()) {
   $mod_type['mod_type'] = $_POST['mod_type'] ?? '';
   $mod_type['description'] = $_POST['description'] ?? '';
   $result = update_mod_type($mod_type);
-  redirect_to(url_for('/staff/mod_types/view.php?id=' . h(u($id))));
+  if ($result === true) {
+    redirect_to(url_for('/staff/mod_types/view.php?id=' . h(u($id))));
+  } else {
+    $errors = $result;
+  }
 
 } else {
-
   $mod_type = find_mod_type_by_id($id);
-
 }
 
 ?>
@@ -36,7 +38,7 @@ if(is_post_request()) {
 
   <div class="page edit">
     <h1>Edit Mod Type</h1>
-
+    <?= display_errors($errors); ?>
     <form action="<?= url_for('/staff/mod_types/edit.php?id=' . h(u($id))); ?>" method="post">
       <dl>
         <dt>Name</dt>
