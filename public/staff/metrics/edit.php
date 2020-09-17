@@ -17,7 +17,12 @@ if(is_post_request()) {
   $metric['metric'] = $_POST['metric'] ?? '';
   $metric['description'] = $_POST['description'] ?? '';
   $result = update_metric($metric);
-  redirect_to(url_for('/staff/metrics/view.php?id=' . h(u($id))));
+  if($result === true){
+    redirect_to(url_for('staff/metrics/view.php?id=' . h(u($id))));
+  } else {
+    $errors = $result;
+  }
+
 } else {
   $metric = find_metric_by_id($id);
 }
@@ -34,7 +39,7 @@ if(is_post_request()) {
 
   <div class="page edit">
     <h1>Edit Metric</h1>
-
+    <?= display_errors($errors); ?>
     <form action="<?= url_for('/staff/metrics/edit.php?id=' . h(u($id))); ?>" method="post">
       <dl>
         <dt>Name</dt>

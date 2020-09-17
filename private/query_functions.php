@@ -22,6 +22,10 @@
 
   function insert_exercise_category($exercise_category) {
     global $db;
+    $errors = validate_exercise_category($exercise_category);
+    if(!empty($errors)){
+      return $errors;
+    }
     $sql = "INSERT INTO exercise_categories (exercise_category, description) ";
     $sql .= "VALUES (";
     $sql .= "'" . addslashes($exercise_category['exercise_category']) . "', ";
@@ -39,6 +43,10 @@
 
   function update_exercise_category($exercise_category){
     global $db;
+    $errors = validate_exercise_category($exercise_category);
+    if(!empty($errors)){
+      return $errors;
+    }
     $sql = "UPDATE exercise_categories SET ";
     $sql .= "exercise_category='" . addslashes($exercise_category['exercise_category']) . "', ";
     $sql .= "description='" . addslashes($exercise_category['description']) . "' ";
@@ -67,7 +75,25 @@
       db_disconnect($db);
       exit;
     }
-}
+  }
+
+  function validate_exercise_category($exercise_category){
+    $errors = [];
+
+    // menu_name
+    if(is_blank($exercise_category['exercise_category'])) {
+      $errors[] = "Name cannot be blank.";
+    } elseif(!has_length($exercise_category['exercise_category'], ['min' => 2, 'max' => 255])) {
+      $errors[] = "Name must be between 2 and 255 characters.";
+    }
+    $current_id = $exercise_category['id'] ?? '0';
+    if(!has_unique_exercise_category_name($exercise_category['exercise_category'], $current_id)){
+      $errors[] = "Name must be unique.";
+    }
+
+    return $errors;
+  }
+
 // exercises functions
   function find_all_exercises() {
     global $db;
@@ -91,6 +117,10 @@
 
   function insert_exercise($exercise) {
     global $db;
+    $errors = validate_exercise($exercise);
+    if (!empty($errors)) {
+      return $errors;
+    }
     $sql = "INSERT INTO exercises ";
     $sql .= "(exercise_name, category_id, vidLink, instruction) ";
     $sql .= "VALUES (";
@@ -111,6 +141,10 @@
 
   function update_exercise($exercise) {
     global $db;
+    $errors = validate_exercise($exercise);
+    if (!empty($errors)) {
+      return $errors;
+    }
     $sql = "UPDATE exercises SET ";
     $sql .= "exercise_name='" . addslashes($exercise['exercise_name']) . "', ";
     $sql .= "category_id='" . $exercise['category_id'] . "', ";
@@ -144,6 +178,30 @@
     }
 
   }
+
+  function validate_exercise($exercise){
+    $errors = [];
+
+    // Exercise
+    if(is_blank($exercise['exercise_name'])) {
+      $errors[] = "Name cannot be blank.";
+    } elseif(!has_length($exercise['exercise_name'], ['min' => 2, 'max' => 255])) {
+      $errors[] = "Name must be between 2 and 255 characters.";
+    }
+    $current_id = $exercise['id'] ?? '0';
+    if(!has_unique_exercise_name($exercise['exercise_name'], $current_id)){
+      $errors[] = "Name must be unique.";
+    }
+
+    // subject_id
+    if(is_blank($exercise['category_id'])) {
+      $errors[] = "You must select an exercise category.";
+    }
+
+    return $errors;
+  }
+
+
 // Metric Functions
   function find_all_metrics() {
     global $db;
@@ -166,6 +224,10 @@
 
   function insert_metric($metric) {
     global $db;
+    $errors = validate_metric($metric);
+    if(!empty($errors)) {
+      return $errors;
+    }
     $sql = "INSERT INTO metrics ";
     $sql .= "(metric, description) VALUES (";
     $sql .= "'" . addslashes($metric['metric']) . "', ";
@@ -183,6 +245,10 @@
 
   function update_metric($metric){
     global $db;
+    $errors = validate_metric($metric);
+    if(!empty($errors)){
+      return $errors;
+    }
     $sql = "UPDATE metrics SET ";
     $sql .= "metric='" . addslashes($metric['metric']) . "', ";
     $sql .= "description='" . addslashes($metric['description']) . "' ";
@@ -213,76 +279,122 @@
     }
   }
 
+  function validate_metric($metric){
+    $errors = [];
+
+    // menu_name
+    if(is_blank($metric['metric'])) {
+      $errors[] = "Name cannot be blank.";
+    } elseif(!has_length($metric['metric'], ['min' => 2, 'max' => 255])) {
+      $errors[] = "Name must be between 2 and 255 characters.";
+    }
+    $current_id = $metric['id'] ?? '0';
+    if(!has_unique_subject_menu_name($metric['metric'], $current_id)){
+    $errors[]= "Name must be unique.";
+    }
+    $current_id = $metric['id'] ?? '0';
+    if(!has_unique_metric_name($metric['metric'], $current_id)){
+      $errors[] = "Name must be unique.";
+    }
+
+    return $errors;
+  }
+
 // Mod Type Functions
 
-function find_all_mod_types(){
-  global $db;
-  $sql = "SELECT * FROM mod_types ";
-  $sql .= "ORDER BY mod_type ASC";
-  $result = mysqli_query($db, $sql);
-  confirm_result_set($result);
-  return $result;
-}
-
-function find_mod_type_by_id($id) {
-  global $db;
-  $sql = "SELECT * FROM mod_types ";
-  $sql .= "WHERE id='" . $id . "'";
-  $result = mysqli_query($db, $sql);
-  $mod_type = mysqli_fetch_assoc($result);
-  mysqli_free_result($result);
-  return $mod_type;
-}
-
-function update_mod_type($mod_type){
-  global $db;
-  $sql = "UPDATE mod_types SET ";
-  $sql .= "mod_type='" . addslashes($mod_type['mod_type']) . "', ";
-  $sql .= "description='" . addslashes($mod_type['description']) . "' ";
-  $sql .= "WHERE id='". $mod_type['id'] . "' ";
-  $sql .= "LIMIT 1";
-  $result = mysqli_query($db, $sql);
-  if($result) {
-    return true;
-  } else {
-  echo mysqli_error($db);
-  db_disconnect($db);
-  // echo $sql;
-  exit;
+  function find_all_mod_types(){
+    global $db;
+    $sql = "SELECT * FROM mod_types ";
+    $sql .= "ORDER BY mod_type ASC";
+    $result = mysqli_query($db, $sql);
+    confirm_result_set($result);
+    return $result;
   }
-}
 
-function delete_mod_type($id){
-  global $db;
-  $sql = "DELETE FROM mod_types ";
-  $sql .= "WHERE id='" . $id . "' ";
-  $sql .= "LIMIT 1";
-  $result = mysqli_query($db, $sql);
-  if ($result) {
-    return true;
-  } else {
+  function find_mod_type_by_id($id) {
+    global $db;
+    $sql = "SELECT * FROM mod_types ";
+    $sql .= "WHERE id='" . $id . "'";
+    $result = mysqli_query($db, $sql);
+    $mod_type = mysqli_fetch_assoc($result);
+    mysqli_free_result($result);
+    return $mod_type;
+  }
+
+  function update_mod_type($mod_type){
+    global $db;
+    $errors = validate_mod_type($mod_type);
+    if (!empty($errors)) {
+      return $errors;
+    }
+    $sql = "UPDATE mod_types SET ";
+    $sql .= "mod_type='" . addslashes($mod_type['mod_type']) . "', ";
+    $sql .= "description='" . addslashes($mod_type['description']) . "' ";
+    $sql .= "WHERE id='". $mod_type['id'] . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if($result) {
+      return true;
+    } else {
+    echo mysqli_error($db);
+    db_disconnect($db);
+    // echo $sql;
+    exit;
+    }
+  }
+
+  function delete_mod_type($id){
+    global $db;
+    $sql = "DELETE FROM mod_types ";
+    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
+  }
+
+  function insert_mod_type($mod_type) {
+    global $db;
+    $errors = validate_mod_type($mod_type);
+    if(!empty($errors)){
+      return $errors;
+    }
+    $sql = "INSERT INTO mod_types ";
+    $sql .= "(mod_type, description) VALUES (";
+    $sql .= "'" . addslashes($mod_type['mod_type']) . "', ";
+    $sql .= "'" . addslashes($mod_type['description']) . "'";
+    $sql .= ")";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      return true;
+    } else {
     echo mysqli_error($db);
     db_disconnect($db);
     exit;
+    }
   }
-}
 
-function insert_mod_type($mod_type) {
-  global $db;
-  $sql = "INSERT INTO mod_types ";
-  $sql .= "(mod_type, description) VALUES (";
-  $sql .= "'" . addslashes($mod_type['mod_type']) . "', ";
-  $sql .= "'" . addslashes($mod_type['description']) . "'";
-  $sql .= ")";
-  $result = mysqli_query($db, $sql);
-  if ($result) {
-    return true;
-  } else {
-  echo mysqli_error($db);
-  db_disconnect($db);
-  exit;
+  function validate_mod_type($mod_type){
+    $errors = [];
+
+    // menu_name
+    if(is_blank($mod_type['mod_type'])) {
+      $errors[] = "Name cannot be blank.";
+    } elseif(!has_length($mod_type['mod_type'], ['min' => 2, 'max' => 255])) {
+      $errors[] = "Name must be between 2 and 255 characters.";
+    }
+    $current_id = $mod_type['id'] ?? '0';
+    if(!has_unique_subject_menu_name($mod_type['mod_type'], $current_id)){
+    $errors[]= "Name must be unique.";
+    }
+
+    return $errors;
   }
-}
 
 // Page functions
   function find_all_pages() {
@@ -306,6 +418,10 @@ function insert_mod_type($mod_type) {
 
   function insert_page($page) {
     global $db;
+    $errors = validate_page($page);
+    if(!empty($errors)){
+      return $errors;
+    }
     $sql = "INSERT INTO pages ";
     $sql .= "(menu_name, subject_id, position, visible, content) Values (";
     $sql .= "'" . addslashes($page['menu_name']) . "', ";
@@ -326,6 +442,10 @@ function insert_mod_type($mod_type) {
 
   function update_page($page) {
     global $db;
+    $errors = validate_page($page);
+    if(!empty($errors)){
+      return $errors;
+    }
     $sql = "UPDATE pages SET ";
     $sql .= "menu_name='" . addslashes($page['menu_name']) . "', ";
     $sql .= "position='" . $page['position'] . "', ";
@@ -358,6 +478,47 @@ function insert_mod_type($mod_type) {
       exit;
     }
   }
+
+  function validate_page($page) {
+
+    $errors = [];
+
+    // menu_name
+    if(is_blank($page['menu_name'])) {
+      $errors[] = "Name cannot be blank.";
+    } elseif(!has_length($page['menu_name'], ['min' => 2, 'max' => 255])) {
+      $errors[] = "Name must be between 2 and 255 characters.";
+    }
+    $current_id =$page['id'] ?? '0';
+    if(!has_unique_page_menu_name($page['menu_name'], $current_id)){
+      $errors[] = "Name must be unique.";
+    }
+
+    // subject_id
+    if(is_blank($page['subject_id'])) {
+      $errors[] = "You must select a page subject.";
+    }
+
+    // position
+    // Make sure we are working with an integer
+    $postion_int = (int) $page['position'];
+    if($postion_int <= 0) {
+      $errors[] = "Position must be greater than zero.";
+    }
+    if($postion_int > 999) {
+      $errors[] = "Position must be less than 999.";
+    }
+
+    // visible
+    // Make sure we are working with a string
+    $visible_str = (string) $page['visible'];
+    if(!has_inclusion_of($visible_str, ["0","1"])) {
+      $errors[] = "Visible must be true or false.";
+    }
+
+    return $errors;
+  }
+
 // Subject Functions
   function find_all_subjects() {
     global $db;
@@ -380,6 +541,10 @@ function insert_mod_type($mod_type) {
 
   function insert_subject($subject) {
     global $db;
+    $errors = validate_subject($subject);
+    if(!empty($errors)){
+      return $errors;
+    }
     $sql = "INSERT INTO subjects (menu_name, position, visible) ";
     $sql .= "VALUES (";
     $sql .= "'" . addslashes($subject['menu_name']) . "',";
@@ -398,6 +563,10 @@ function insert_mod_type($mod_type) {
 
   function update_subject($subject) {
     global $db;
+    $errors = validate_subject($subject);
+    if(!empty($errors)){
+      return $errors;
+    }
     $sql = "UPDATE subjects SET ";
     $sql .= "menu_name='" . addslashes($subject['menu_name']) . "', ";
     $sql .= "position='" . $subject['position']. "', ";
@@ -428,6 +597,136 @@ function insert_mod_type($mod_type) {
       exit;
     }
   }
+
+  function validate_subject($subject) {
+
+    $errors = [];
+
+    // menu_name
+    if(is_blank($subject['menu_name'])) {
+      $errors[] = "Name cannot be blank.";
+    } elseif(!has_length($subject['menu_name'], ['min' => 2, 'max' => 255])) {
+      $errors[] = "Name must be between 2 and 255 characters.";
+    }
+      $current_id = $subject['id'] ?? '0';
+      if(!has_unique_subject_menu_name($subject['menu_name'], $current_id)){
+      $errors[]= "Name must be unique.";
+    }
+
+    // position
+    // Make sure we are working with an integer
+    $postion_int = (int) $subject['position'];
+    if($postion_int <= 0) {
+      $errors[] = "Position must be greater than zero.";
+    }
+    if($postion_int > 999) {
+      $errors[] = "Position must be less than 999.";
+    }
+
+    // visible
+    // Make sure we are working with a string
+    $visible_str = (string) $subject['visible'];
+    if(!has_inclusion_of($visible_str, ["0","1"])) {
+      $errors[] = "Visible must be true or false.";
+    }
+
+    return $errors;
+  }
+
+  // Workout Type Functions
+  function find_all_workout_types() {
+    global $db;
+    $sql = "SELECT * FROM workout_types ";
+    $sql .= "ORDER BY workout_type ASC";
+    $result = mysqli_query($db, $sql);
+    confirm_result_set($result);
+    return $result;
+  }
+
+  function find_workout_type_by_id($id) {
+    global $db;
+    $sql = "SELECT * FROM workout_types ";
+    $sql .= "WHERE id='" . $id . "'";
+    $result = mysqli_query($db, $sql);
+    $workout_type = mysqli_fetch_assoc($result);
+    mysqli_free_result($result);
+    return $workout_type;
+  }
+
+  function insert_workout_type($workout_type) {
+    global $db;
+    $errors = validate_workout_type($workout_type);
+    if(!empty($errors)){
+      return $errors;
+    }
+    $sql = "INSERT INTO workout_types ";
+    $sql .= "(workout_type, description) VALUES (";
+    $sql .= "'" . addslashes($workout_type['workout_type']) . "', ";
+    $sql .= "'" . addslashes($workout_type['description']) . "'";
+    $sql .= ")";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
+  }
+
+  function update_workout_type($workout_type){
+    global $db;
+    $errors = validate_workout_type($workout_type);
+    if(!empty($errors)){
+      return $errors;
+    }
+    $sql = "UPDATE workout_types SET ";
+    $sql .= "workout_type='" . addslashes($workout_type['workout_type']) . "', ";
+    $sql .= "description='" . addslashes($workout_type['description']) . "' ";
+    $sql .= "WHERE id='" . $workout_type['id'] . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if($result){
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
+  }
+
+  function delete_workout_type($id){
+    global $db;
+    $sql = "DELETE FROM workout_types ";
+    $sql .= "WHERE id='" . $id . "' ";
+    $sql .= "LIMIT 1";
+    $result = mysqli_query($db, $sql);
+    if ($result) {
+      return true;
+    } else {
+      echo mysqli_error($db);
+      db_disconnect($db);
+      exit;
+    }
+  }
+
+  function validate_workout_type($workout_type) {
+
+        // menu_name
+        if(is_blank($workout_type['workout_type'])) {
+          $errors[] = "Name cannot be blank.";
+        } elseif(!has_length($workout_type['workout_type'], ['min' => 2, 'max' => 255])) {
+          $errors[] = "Name must be between 2 and 255 characters.";
+        }
+        $current_id = $workout_type['id'] ?? '0';
+        if(!has_unique_subject_menu_name($workout_type['workout_type'], $current_id)){
+        $errors[]= "Name must be unique.";
+        }
+
+        return $errors;
+      }
+
+
 //Workout functions
   function find_all_workouts() {
     global $db;
@@ -440,6 +739,10 @@ function insert_mod_type($mod_type) {
 
   function insert_workout($workout){
     global $db;
+    $errors = validate_workout($workout);
+    if(!empty($errors)){
+      return $errors;
+    }
     $sql = "INSERT INTO workouts (workout_name, author, metric_id, instructions, weight, stimulus, scales, rounds, workout_time, workout_type_id) ";
     $sql .= "VALUES (";
     $sql .= "'" . addslashes($workout['workout_name']) . "',";
@@ -475,6 +778,10 @@ function insert_mod_type($mod_type) {
 
   function update_workout($workout){
     global $db;
+    $errors = validate_workout($workout);
+    if(!empty($errors)){
+      return $errors;
+    }
     $sql = "UPDATE workouts SET ";
     $sql .= "workout_name='" . addslashes($workout['workout_name']) . "',";
     $sql .= "author='" . addslashes($workout['author']) . "',";
@@ -497,7 +804,7 @@ function insert_mod_type($mod_type) {
     exit;
   }
 
-  function delete_workout_and_steps($id){
+  function delete_workout($id){
     global $db;
     $sql = "DELETE FROM workouts ";
     $sql .= "WHERE id='" . $id . "' ";
@@ -512,10 +819,37 @@ function insert_mod_type($mod_type) {
     }
   }
 
-  // Workout Mod Functions
+  function validate_workout($workout) {
 
+    $errors = [];
+
+    // workout_name
+    if(is_blank($workout['workout_name'])) {
+      $errors[] = "Name cannot be blank.";
+    } elseif(!has_length($workout['workout_name'], ['min' => 2, 'max' => 255])) {
+      $errors[] = "Name must be between 2 and 255 characters.";
+    }
+    $current_id = $workout['id'] ?? '0';
+    if(!has_unique_workout_name(addslashes($workout['workout_name']), $current_id)){
+      $errors[] = "Name must be unique.";
+    }
+
+    // workout_type_id
+    if(is_blank($workout['workout_type_id'])) {
+      $errors[] = "You must select a workout type.";
+    }
+
+    return $errors;
+  }
+
+
+  // Workout Mod Functions
   function insert_mod($mod){
     global $db;
+    $errors = validate_mod($mod);
+    if(!empty($errors)){
+      return $errors;
+    }
     $sql = "INSERT INTO mods ";
     $sql .= "(mod_order, mod_type_id, workout_id, description) VALUES ( ";
     $sql .= "'" . $mod['mod_order'] . "', ";
@@ -584,6 +918,18 @@ function insert_mod_type($mod_type) {
       mysqli_free_result($result);
     }
 
+    function validate_mod($mod) {
+      $errors = [];
+      // mods_order
+      if(is_blank($mod['mod_order'])) {
+        $errors[] = "You must enter mod order.";
+      }
+      // mod_type
+      if(is_blank($mod['mod_type_id'])) {
+        $errors[] = "You must select a mod type.";
+      }
+      return $errors;
+    }
   // Workout Step functions
   function find_workout_step_by_id($id) {
     global $db;
@@ -595,7 +941,6 @@ function insert_mod_type($mod_type) {
     return $workout_step;
   }
 
-
   function find_all_workout_steps() {
     global $db;
     $sql = "SELECT * FROM workout_steps ";
@@ -604,8 +949,6 @@ function insert_mod_type($mod_type) {
     confirm_result_set($result);
     return $result;
   }
-
-
 
   function find_workout_steps_by_workout ($workout_id){
       global $db;
@@ -629,6 +972,11 @@ function insert_mod_type($mod_type) {
 
   function insert_workout_steps($workout_step) {
     global $db;
+    global $db;
+    $errors = validate_workout_step($workout_step);
+    if(!empty($errors)){
+      return $errors;
+    }
     $sql = "INSERT INTO workout_steps ";
     $sql .= "(step_order, exercise_id, mod_id, reps) VALUES (";
     $sql .= "'" . $workout_step['step_order'] . "', ";
@@ -643,20 +991,6 @@ function insert_mod_type($mod_type) {
     echo mysqli_error($db);
     db_disconnect($db);
     exit;
-    }
-  }
-
-  function delete_related_workout_steps($foreignKey){
-    global $db;
-    $sql = "DELETE FROM workout_steps ";
-    $sql .= "WHERE workout_id='" . $foreignKey . "'";
-    $result = mysqli_query($db, $sql);
-    if ($result) {
-      return true;
-    } else {
-      echo mysqli_error($db);
-      db_disconnect($db);
-      exit;
     }
   }
 
@@ -675,74 +1009,17 @@ function insert_mod_type($mod_type) {
     }
   }
 
-
-  // Workout Type Functions
-  function find_all_workout_types() {
-    global $db;
-    $sql = "SELECT * FROM workout_types ";
-    $sql .= "ORDER BY workout_type ASC";
-    $result = mysqli_query($db, $sql);
-    confirm_result_set($result);
-    return $result;
-  }
-
-  function find_workout_type_by_id($id) {
-    global $db;
-    $sql = "SELECT * FROM workout_types ";
-    $sql .= "WHERE id='" . $id . "'";
-    $result = mysqli_query($db, $sql);
-    $workout_type = mysqli_fetch_assoc($result);
-    mysqli_free_result($result);
-    return $workout_type;
-  }
-
-  function insert_workout_type($workout_type) {
-    global $db;
-    $sql = "INSERT INTO workout_types ";
-    $sql .= "(workout_type, description) VALUES (";
-    $sql .= "'" . addslashes($workout_type['workout_type']) . "', ";
-    $sql .= "'" . addslashes($workout_type['description']) . "'";
-    $sql .= ")";
-    $result = mysqli_query($db, $sql);
-    if ($result) {
-      return true;
-    } else {
-      echo mysqli_error($db);
-      db_disconnect($db);
-      exit;
+  function validate_workout_step($workout_step) {
+    $errors = [];
+    // workout_steps_order
+    if(is_blank($workout_step['step_order'])) {
+      $errors[] = "You must enter workout_step order.";
     }
-  }
-
-  function update_workout_type($workout_type){
-    global $db;
-    $sql = "UPDATE workout_types SET ";
-    $sql .= "workout_type='" . addslashes($workout_type['workout_type']) . "', ";
-    $sql .= "description='" . addslashes($workout_type['description']) . "' ";
-    $sql .= "WHERE id='" . $workout_type['id'] . "' ";
-    $sql .= "LIMIT 1";
-    $result = mysqli_query($db, $sql);
-    if($result){
-      return true;
-    } else {
-      echo mysqli_error($db);
-      db_disconnect($db);
-      exit;
+    // workout_step_type
+    if(is_blank($workout_step['exercise_id'])) {
+      $errors[] = "You must select an exercise.";
     }
-  }
-
-  function delete_workout_type($id){
-    global $db;
-    $sql = "DELETE FROM workout_types ";
-    $sql .= "WHERE id='" . $id . "' ";
-    $sql .= "LIMIT 1";
-    $result = mysqli_query($db, $sql);
-    if ($result) {
-      return true;
-    } else {
-      echo mysqli_error($db);
-      db_disconnect($db);
-      exit;
-    }
+    return $errors;
   }
 
  ?>

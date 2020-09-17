@@ -5,9 +5,13 @@ if(is_post_request()) {
   $exercise_category['exercise_category'] = $_POST['exercise_category'];
   $exercise_category['description'] = $_POST['description'];
   $result = insert_exercise_category($exercise_category);
-  $new_id = mysqli_insert_id($db);
-  redirect_to(url_for('/staff/exercise_categories/view.php?id=' . $new_id));
-
+  if($result === true){
+    $new_id = mysqli_insert_id($db);
+    redirect_to(url_for('/staff/exercise_categories/view.php?id=' . h(u($new_id))));
+  } else {
+    $errors = $result;
+    // var_dump($errors);
+  }
 }
 
 ?>
@@ -18,7 +22,7 @@ if(is_post_request()) {
 <a class="back-link" href="<?= url_for('/staff/exercise_categories/index.php');?>">&laquo; Back to List</a>
 <div class="workout type new">
   <h1>Create Exercise Category</h1>
-
+  <?= display_errors($errors); ?>
   <form action="<?= url_for('/staff/exercise_categories/new.php'); ?>" method="post">
     <dl>
       <dt>Name</dt>

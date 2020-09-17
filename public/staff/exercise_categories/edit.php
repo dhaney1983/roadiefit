@@ -12,12 +12,15 @@ if(is_post_request()) {
     $exercise_category['description'] = $_POST['description'] ?? '';
     $exercise_category['id'] = $id ?? '';
   $result = update_exercise_category($exercise_category);
-  redirect_to(url_for('/staff/exercise_categories/view.php?id=' . $id));
+  if($result === true){
+    redirect_to(url_for('/staff/exercise_categories/view.php?id=' . $id));
+  } else {
+    $errors = $result;
+    // var_dump($errors);
+  }
 
 } else {
-
   $exercise_category = find_exercise_category_by_id($id);
-
 }
 
 ?>
@@ -28,7 +31,7 @@ if(is_post_request()) {
 <a class="back-link" href="<?= url_for('/staff/exercise_categories/index.php');?>">&laquo; Back to List</a>
 <div class="workout type new">
   <h1>Edit Exercise Category</h1>
-
+  <?= display_errors($errors); ?>
   <form action="<?= url_for('/staff/exercise_categories/edit.php?id=' . h(u($id))); ?>" method="post">
     <dl>
       <dt>Name</dt>

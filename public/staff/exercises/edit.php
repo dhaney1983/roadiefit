@@ -14,9 +14,13 @@ if (is_post_request()) {
   $exercise['instruction'] = $_POST['instruction'] ?? '';
   $exercise['vidLink'] = $_POST['vidLink'] ?? '';
   $exercise['id'] = $id;
-$result = update_exercise($exercise);
-redirect_to(url_for('/staff/exercises/view.php?id=' . h(u($id))));
-
+  $result = update_exercise($exercise);
+  if($result === true){
+    redirect_to(url_for('/staff/exercises/view.php?id=' . h(u($id))));
+  } else {
+    $errors = $result;
+    // var_dump($errors);
+  }
 
 } else {
   $exercise = find_exercise_by_id($id);
@@ -29,6 +33,7 @@ redirect_to(url_for('/staff/exercises/view.php?id=' . h(u($id))));
 <a class="back-link" href="<?= url_for('/staff/exercises/index.php'); ?>">&laquo; Back to List</a>
   <div class="exercise edit">
     <h1>Edit Exercise</h1>
+    <?= display_errors($errors); ?>
     <form action="<?= url_for('/staff/exercises/edit.php?id=' . h(u($id)));?>" method="post">
       <dl>
         <dt>Exercise Name</dt>
