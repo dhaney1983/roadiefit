@@ -102,8 +102,8 @@
     global $db;
 
     $sql = "SELECT * FROM pages ";
-    $sql .= "WHERE menu_name='" . $menu_name . "' ";
-    $sql .= "AND id != '" . $current_id . "'";
+    $sql .= "WHERE menu_name='" . db_escape($db, $menu_name) . "' ";
+    $sql .= "AND id != '" . db_escape($db, $current_id) . "'";
 
     $page_set = mysqli_query($db, $sql);
     $page_count = mysqli_num_rows($page_set);
@@ -121,8 +121,8 @@
     global $db;
 
     $sql = "SELECT * FROM subjects ";
-    $sql .= "WHERE menu_name='" . $menu_name . "' ";
-    $sql .= "AND id != '" . $current_id . "'";
+    $sql .= "WHERE menu_name='" . db_escape($db, $menu_name) . "' ";
+    $sql .= "AND id != '" . db_escape($db, $current_id) . "'";
 
     $subject_set = mysqli_query($db, $sql);
     $subject_count = mysqli_num_rows($subject_set);
@@ -140,8 +140,8 @@
     global $db;
 
     $sql = "SELECT * FROM exercise_categories ";
-    $sql .= "WHERE exercise_category='" . $exercise_category . "' ";
-    $sql .= "AND id != '" . $current_id . "'";
+    $sql .= "WHERE exercise_category='" . db_escape($db, $exercise_category) . "' ";
+    $sql .= "AND id != '" . db_escape($db, $current_id) . "'";
 
     $exercise_category_set = mysqli_query($db, $sql);
     $exercise_category_count = mysqli_num_rows($exercise_category_set);
@@ -159,8 +159,8 @@
     global $db;
 
     $sql = "SELECT * FROM exercises ";
-    $sql .= "WHERE exercise_name='" . $exercise . "' ";
-    $sql .= "AND id != '" . $current_id . "'";
+    $sql .= "WHERE exercise_name='" . db_escape($db, $exercise) . "' ";
+    $sql .= "AND id != '" . db_escape($db, $current_id) . "'";
 
     $exercise_set = mysqli_query($db, $sql);
     $exercise_count = mysqli_num_rows($exercise_set);
@@ -178,8 +178,8 @@
     global $db;
 
     $sql = "SELECT * FROM metrics ";
-    $sql .= "WHERE metric='" . $metric . "' ";
-    $sql .= "AND id != '" . $current_id . "'";
+    $sql .= "WHERE metric='" . db_escape($db, $metric) . "' ";
+    $sql .= "AND id != '" . db_escape($db, $current_id) . "'";
 
     $metric_set = mysqli_query($db, $sql);
     $metric_count = mysqli_num_rows($metric_set);
@@ -197,8 +197,8 @@
     global $db;
 
     $sql = "SELECT * FROM mod_types ";
-    $sql .= "WHERE mod_type='" . $mod_type . "' ";
-    $sql .= "AND id != '" . $current_id . "'";
+    $sql .= "WHERE mod_type='" . db_escape($db, $mod_type) . "' ";
+    $sql .= "AND id != '" . db_escape($db, $current_id) . "'";
 
     $mod_type_set = mysqli_query($db, $sql);
     $mod_type_count = mysqli_num_rows($mod_type_set);
@@ -217,8 +217,8 @@ function has_unique_workout_type_name($workout_type, $current_id="0") {
   global $db;
 
   $sql = "SELECT * FROM workout_types ";
-  $sql .= "WHERE workout_type='" . $workout_type . "' ";
-  $sql .= "AND id != '" . $current_id . "'";
+  $sql .= "WHERE workout_type='" . db_escape($db, $workout_type) . "' ";
+  $sql .= "AND id != '" . db_escape($db, $current_id) . "'";
 
   $workout_type_set = mysqli_query($db, $sql);
   $workout_type_count = mysqli_num_rows($workout_type_set);
@@ -236,8 +236,8 @@ function has_unique_workout_name($workout, $current_id="0") {
   global $db;
 
   $sql = "SELECT * FROM workouts ";
-  $sql .= "WHERE workout_name='" . $workout . "' ";
-  $sql .= "AND id != '" . $current_id . "'";
+  $sql .= "WHERE workout_name='" . db_escape($db, $workout) . "' ";
+  $sql .= "AND id != '" . db_escape($db, $current_id) . "'";
 
   $workout_set = mysqli_query($db, $sql);
   $workout_count = mysqli_num_rows($workout_set);

@@ -8,9 +8,13 @@
   }
 
   function db_disconnect($connection){
-    if (isset($connection)) :
+    if (isset($connection)) {
       mysqli_close($connection);
-    endif;
+    }
+  }
+
+  function db_escape($connection, $string){
+    return mysqli_real_escape_string($connection, $string);
   }
 
   function confirm_db_connect() {

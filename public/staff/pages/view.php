@@ -25,7 +25,7 @@ $page = find_page_by_id($id);
       </dl>
       <dl>
         <dt>Visible</dt>
-        <dd><?= $page['visible'];?></dd>
+        <dd><?php echo $page['visible'] == '1' ? 'true' : 'false'; ?></dd>
       </dl>
       <dl>
         <dt>Content</dt>
